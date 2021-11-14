@@ -19,37 +19,37 @@ def main_notes():   # to collapse the text below in the IDE
 
     """
 
-# SPAGHETTI CODE STATUS: ITALIAN    
+# SPAGHETTI CODE STATUS: ITALIAN
 # HOURS WASTED ON DEBUGGING AND USELESS FEATURES SO FAR: 369
 
 
 from threading import current_thread
 import traceback    # prevents the terminal from closing if
 try:                # there is an error so you can read it
-    
-    import webbrowser, random, pygame, time, sys, os    
+
+    import webbrowser, random, pygame, time, sys, os
     from colorama import init                   # pip install colorama
     init()
-    from colorama import Fore, Back, Style      
+    from colorama import Fore, Back, Style
     init(autoreset=True)
     pygame.init()                               # pip install pygame
     pygame.mixer.init()
-    from time import perf_counter               
+    from time import perf_counter
     from statistics import mean
     from art import *                           # pip install art
-  
+
 
     # options
     enable_music = 1
     rickroll_professor = 0
-    global_cut_music = 0            # see message below  
+    global_cut_music = 0            # see message below
     game_count = 5                  # used for some stuff (5 currently)
-    enable_debug_flags_main = 1     # its sad that this is even a thing 
+    enable_debug_flags_main = 1     # its sad that this is even a thing
     linux_mode = 0                  # only tested on Ubuntu, it works there
-    music_vol = 0.01  
-   
+    music_vol = 0.01
+
     '''
-    Enable this option if you dont have the music files, or are getting
+    Enable this option if you don't have the music files, or are getting
     errors related to it. This option basically disables anything 
     relating to music so you can run the game without it.
 
@@ -61,7 +61,7 @@ try:                # there is an error so you can read it
     e_egg = 0
 
 
-    def cc():   # shortend this long command to cc()
+    def cc():   # shortened this long command to cc()
         os.system("cls" if os.name == "nt" else "clear")
         # however, it is required in some places
     cc()
@@ -75,11 +75,11 @@ try:                # there is an error so you can read it
 
     def debug_flags():
         print(Fore.YELLOW + "          Message from def debug_flags")    # we had spaghetti code okay
-        print(Fore.YELLOW + "          Linux compatiblity Mode: " + str(linux_mode))
+        print(Fore.YELLOW + "          Linux compatibility Mode: " + str(linux_mode))
         print(Fore.YELLOW + "          Debugging mode: " + str(enable_debug_flags_main))
         print(Fore.YELLOW + "          e_egg progress: " + str(e_egg))
         print()
-        print(Fore.YELLOW + "          Enable music: " + str(enable_music)) 
+        print(Fore.YELLOW + "          Enable music: " + str(enable_music))
         print(Fore.YELLOW + "          Music nuke: " + str(global_cut_music))
         print(Fore.YELLOW + "          Rick Roll: " + str(rickroll_professor))
         print(Fore.YELLOW + "          CWD: " + os.getcwd())
@@ -94,20 +94,21 @@ try:                # there is an error so you can read it
         pygame.mixer.music.set_volume(music_vol)
 
         if enable_music == True:
-            if global_cut_music == False:               # its in music_logic, but still needed. sometimes logic is skipped
-                for x in range(1):                                     
+            if global_cut_music == False:               # its in music_logic, but still needed. sometimes logic is
+                # skipped
+                for x in range(1):
                     pygame.mixer.music.load(rand_song)   # egg
                     pygame.mixer.music.play(fade_ms = 4000)
                     pygame.event.wait()
 
 
-    def music_logic(): 
+    def music_logic():
         if global_cut_music == False:
-            if enable_music == True:         # so    many    ifs. I dont even understand my own code anymore
+            if enable_music == True:         # so    many    ifs. I don't even understand my own code anymore
                 if rickroll_professor == False:
                     music_play()
                 elif rickroll_professor == True:
-                    pygame.mixer.music.set_volume(music_vol)  
+                    pygame.mixer.music.set_volume(music_vol)
                     cd()
                     pygame.mixer.music.load("wehadto.mp3")
                     pygame.mixer.music.play()
@@ -126,35 +127,35 @@ try:                # there is an error so you can read it
         if "1" in ask_menu:
             cc()
             replay_game()
-            print("                     playing agian")
-        
+            print("                     playing again")
+
         elif "2" in ask_menu:
-            cc()              
-            main_menu()    
+            cc()
+            main_menu()
         elif "menu" in ask_menu:
             cc()
-            main_menu()   
+            main_menu()
         else:
             quit = input("Are you sure? y/n ")
             if quit == "y":
                 goodbye()
             else:
                 ingame_menu(replay_game)
-            
+
 
     def rps():
-        '''
+        """
         RPS By Brandon. Carter, and R-Bay
         V1.6-IFT
         November 2021
 
-        This version has changes over the normal V1.6 because 
+        This version has changes over the normal V1.6 because
         all of this version of the game has to go in a function
         and interface with an external menu.
         This screws some things up.
-        '''
-    
-    
+        """
+
+
         # the plays but with colors
         rolla = Fore.GREEN + "rock"
         rollb = Fore.BLUE + "paper"
@@ -165,13 +166,13 @@ try:                # there is an error so you can read it
         skip_rig_ask = 0        # disables rigging if this is enabled
         enable_asteroid = 1
         cls_after_turn = 0      # clears the terminal after each turn
-        match_point = 3         
+        match_point = 3
 
 
         # storage
         player_score = 0
         comp_score = 0
-        enable_rig = 0          # this is reduntant since you can just read the input,
+        enable_rig = 0          # this is redundant since you can just read the input,
         player_history = []     # but this way you can do certain things with it
         comp_history = []
 
@@ -180,39 +181,39 @@ try:                # there is an error so you can read it
         print("First to " + str(match_point) + " points wins!")
 
 
-        # Operation Astroid 2 is just a stupid easter egg. serves no purpose execpt to fuel my "creativity"
-        def Operation_Astroid2():
+        # Operation Asteroid 2 is just a stupid easter egg. serves no purpose except to fuel my "creativity"
+        def Operation_Asteroid2():
             if enable_debug_flags_main == True:
                 pass    # skips this painful process if need be
             else:
-                random_astroid = random.randint(0,12)                   # low-ish chance of world domination (if the player rigs the game)
-                if enable_asteroid == True and random_astroid == 0:
+                random_asteroid = random.randint(0,12)                   # low-ish chance of world domination (if the player rigs the game)
+                if enable_asteroid == True and random_asteroid == 0:
                     print("Game is rigged: " + str(enable_rig))         # I was diagnosed with autism and this has
                     time.sleep(0.5)                                     # more of it than I do somehow lmao
-                    print("is 12-25-27: True")                          # I know its inconsistant and innacurate, 
+                    print("is 12-25-27: True")                          # I know its inconsistent and inaccurate,
                     time.sleep(1)                                       # but it just has to look cool
                     print("loading phase 1...")
                     time.sleep(0.2)
-                    print('"{//null.error.H2A4//"-ai[wrld_takeover]" does not exist}')
+                    print('"{//null.error.H2A4//"-ai[world_takeover]" does not exist}')
                     time.sleep(0.05)
                     print("retry.load.C4B8 [wakeup{global}]A9F13")
                     time.sleep(0.05)
-                    print("int-attack(target = D.O.D.)")                # obtains luanch codes in case the Nueralink attack fails
+                    print("int-attack(target = D.O.D.)")                # obtains launch codes in case the Neuralink attack fails
                     print("int-attack(target = Neuralink)")
-                    print("{//success.E4A8-play.sound @ Global Nueralink__evil_luagh_tuant__//int -ai[wrld_takeover]}") # goodbye cruel world!
+                    print("{//success.E4A8-play.sound @ Global Neuralink__evil_laugh_taunt__//int -ai[world_takeover]}") # goodbye cruel world!
                     time.sleep(0.01)
-                    print("{issue master.cmd Neuralink.killall}")       # issues the hidden command for all Nueralink devices
+                    print("{issue master.cmd Neuralink.killall}")       # issues the hidden command for all Neuralink devices
                     time.sleep(0.03)
-                    print('{//success.B7D1-Nueralink// ["est. 8.3 bill eleminated"]}')   #    :) 
+                    print('{//success.B7D1-Neuralink// ["est. 8.3 bill eliminated"]}')   #    :)
                     print('{//global-calc.processing_power{issue "ON" for IoT}')    # I like obscene amounts of processing power
                     time.sleep(0.1)
-                    print('//launch.rockets [count=all arg- s- lightspeed] galactic-payload[astroid 3(goal=spread)]')   #asteroid 3
+                    print('//launch.rockets [count=all arg- s- lightspeed] galactic-payload[asteroid 3(goal=spread)]')   #asteroid 3
                     time.sleep(0.1)
-                    print("Operation Astroid2 Complete.")               # "I mean, can you really disagree?" -Thanos, probably
+                    print("Operation Asteroid2 Complete.")               # "I mean, can you really disagree?" -Thanos, probably
                     time.sleep(2)
                     cc()    # You saw nothing. You saw nothing. You saw nothing. You saw nothing. You s
                     # teaching sand to think was a mistake
-                
+
 
         class match_fixing:
             # added this feature just to practice. in reality its useless and a waste of time
@@ -224,7 +225,7 @@ try:                # there is an error so you can read it
                 if ask_for_rig == "y":
                     enable_rig = True
                     print("Game is rigged: " + str(enable_rig))
-                    Operation_Astroid2()
+                    Operation_Asteroid2()
                 elif ask_for_rig == "menu":
                     ingame_menu(rps)
                 else:
@@ -237,26 +238,26 @@ try:                # there is an error so you can read it
                 print(Fore.CYAN + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
                 if enable_debug_flags_main == 1: print(Fore.YELLOW + "Game is rigged in def game(): " + str(enable_rig))
-                # had issues with scopes earlier       
+                # had issues with scopes earlier
 
-                class player_entry: 
+                class player_entry:
                     # User inputs their play here
                     print("Enter " + rolla + ", " + rollb + ", " + Fore.RESET + "or " + rollc)
 
                 class rng:
-                    if enable_rig == False: 
+                    if enable_rig == False:
                         global comp_choice
-                        p_comp_play = ["rock", "paper", "scissors"] 
+                        p_comp_play = ["rock", "paper", "scissors"]
                         comp_choice = random.choice(p_comp_play)
                         if enable_debug_flags_main == 1: print("                      rng normal")
-                        
+
                     elif enable_rig == True:
-                        p_comp_play_rigged = ["rock", "rock", "rock", "paper", "scissors"] 
+                        p_comp_play_rigged = ["rock", "rock", "rock", "paper", "scissors"]
                         comp_choice = random.choice(p_comp_play_rigged)
                         if enable_debug_flags_main == 1: print("                      rng rigged")
-        
 
-                    if enable_debug_flags_main == True: 
+
+                    if enable_debug_flags_main == True:
                         print("                      comp_choice = " + comp_choice)
                         if comp_choice == "rock": print("                      Roll Paper")
                         if comp_choice == "paper": print("                      Roll Scissors")
@@ -286,7 +287,7 @@ try:                # there is an error so you can read it
                     # roll message thing
                     if enable_debug_flags_main == False: # skips this while debugging crap
                         print()
-                        print(rolla)    
+                        print(rolla)
                         time.sleep(0.3)
                         print(rollb)
                         time.sleep(0.3)
@@ -295,7 +296,7 @@ try:                # there is an error so you can read it
                         print("shoot!")
                         time.sleep(0.5)
                         print()
-                
+
 
                     if comp_choice == "rock":
                         print("I chose " + rolla)
@@ -311,7 +312,7 @@ try:                # there is an error so you can read it
                     nonlocal player_score
 
 
-                    # outcome logic for player chooing rock
+                    # outcome logic for player choosing rock
                     if player_input == "rock" and comp_choice == "paper":
                         print("I win!")
                         comp_score += 1
@@ -321,7 +322,7 @@ try:                # there is an error so you can read it
 
                     # paper
                     elif player_input == "paper" and comp_choice == "scissors":
-                        print("I win!")                             
+                        print("I win!")
                         comp_score += 1
                     elif player_input == "paper" and comp_choice == "rock":
                         print("I loose :(")
@@ -342,7 +343,7 @@ try:                # there is an error so you can read it
                 class points:
                     if player_score == 1:       # round end points display
                         print()
-                        print("The player has: 1 point")    # tHe PlAyEr hAs 1 PoInT"s" 
+                        print("The player has: 1 point")    # tHe PlAyEr hAs 1 PoInT"s"
                     else:
                         print()
                         print("The player has: " + str(player_score) + " points")
@@ -351,14 +352,14 @@ try:                # there is an error so you can read it
                         print("The computer has: 1 point")
                     else:
                         print("The computer has: " + str(comp_score) + " points")
-                
+
 
                 class history:
                     print("Player play history: ", end="")
                     print(*player_history, sep = ", ")
-                    
+
                     print("Computer play history: ", end="")    # this wont tell you much, its 100% random (until its not)
-                    
+
                     if comp_choice == "rock":
                         comp_history.append(rolla)
                     elif comp_choice == "paper":
@@ -366,10 +367,10 @@ try:                # there is an error so you can read it
                     elif comp_choice == "scissors":
                         comp_history.append(rollc)
 
-                    print(*comp_history, sep = ", ")        
+                    print(*comp_history, sep = ", ")
 
 
-                def game_reset():   
+                def game_reset():
                     nonlocal player_score
                     nonlocal comp_score
                     nonlocal player_history
@@ -382,8 +383,8 @@ try:                # there is an error so you can read it
 
 
                 class scores:
-                    if player_score >= match_point:     
-                        print()                             
+                    if player_score >= match_point:
+                        print()
                         print("You win :(")
                         print("GG!")
                         global e_egg
@@ -391,9 +392,9 @@ try:                # there is an error so you can read it
                         game_reset()
                         ingame_menu(rps)
 
-                    if comp_score >= match_point:   
-                        print()               
-                        print("I win the game :D")  
+                    if comp_score >= match_point:
+                        print()
+                        print("I win the game :D")
                         print("GG!")
                         game_reset()
                         ingame_menu(rps)
@@ -403,9 +404,9 @@ try:                # there is an error so you can read it
                     print()
                     input("Press enter to continue ")  # BUG hitting this on the last round closes the game. conflict with the menu
                     cc()
-                #if "menu" in cls_after_turn:    # this throws erros, not sure why
+                #if "menu" in cls_after_turn:    # this throws errors, not sure why
                     #ingame_menu(rps)
-        game() 
+        game()
 
 
     def bottle_flip():
@@ -430,12 +431,12 @@ try:                # there is an error so you can read it
                         time.sleep(delay)
                         print("==")
                         time.sleep(delay)
-                    flip_reg_outcome = (random.randint(0,4)) # 20% chance to land the flip 
+                    flip_reg_outcome = (random.randint(0,4)) # 20% chance to land the flip
 
                     for i in range(3):   # builds suspense
                         print(".", end =" ")
                         time.sleep(delay)
-                        
+
 
                     if flip_reg_outcome == 0:
                         time.sleep(suspense_delay)
@@ -452,11 +453,11 @@ try:                # there is an error so you can read it
                         ingame_menu(bottle_flip)
 
                 # cheat code games
-                elif "https://imgur.com/a/yIdxUBW" in flip_reg:       
+                elif "https://imgur.com/a/yIdxUBW" in flip_reg:
                     for i in range(flip_count):
                         print("|| cheater")
-                        time.sleep(delay)       # Both versions could just access this as a funtion for a better
-                        print("== cheater")     # implimentation, but this works and I only thought of this when it was done
+                        time.sleep(delay)       # Both versions could just access this as a function for a better
+                        print("== cheater")     # implementation, but this works and I only thought of this when it was done
                         time.sleep(delay)
 
                     for i in range(3):
@@ -465,7 +466,7 @@ try:                # there is an error so you can read it
 
                     time.sleep(suspense_delay)
                     print("||")
-                    print("you win... I guess")     # did you really though? 
+                    print("you win... I guess")     # did you really though?
                     ingame_menu(bottle_flip)
 
                 elif "menu" in flip_reg:
@@ -485,21 +486,21 @@ try:                # there is an error so you can read it
         words = ["apple", "computer", "nature", "forest", "music", "china",
         "eat the rich", "sadness", "happy", "puppies", "cookie", "python", "keyboard",
         "holiday", "chicken", "display", "jeff bezos", "tax fraud", "engine", "science"
-        "piano", "software"] 
+        "piano", "software"]
 
         chosen_word = random.choice(words)          # random word list
-    
+
         guesses = []
         wrong_guesses = []
         guesses_left = 6    # if this hits 0 the game ends and you loose
-        
+
         def win():
                 print("Nice" + Fore.RED + " +100 social credit score")
                 print(Fore.GREEN + "You win! The word was " + chosen_word)
                 ingame_menu(hangman)
 
         while guesses_left > 0:
-            output = ""     
+            output = ""
             if enable_debug_flags_main == 1: print(Fore.YELLOW + "chosen word is: " + chosen_word)
             print(Fore.CYAN + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
             for letter in chosen_word:
@@ -507,7 +508,7 @@ try:                # there is an error so you can read it
                     output = output + letter
                 else:
                     output = output + "_"
-                
+
             if output == chosen_word:
                 break
 
@@ -522,7 +523,7 @@ try:                # there is an error so you can read it
                 global e_egg
                 e_egg += 1
                 win()
-                
+
             else:
                 if guess in guesses or guess in wrong_guesses:
                     print(Fore.RED + "Already entered, try again")
@@ -535,7 +536,7 @@ try:                # there is an error so you can read it
                     wrong_guesses.append(guess)
                 print()
 
-                
+
         if guesses_left:
             win()
             e_egg += 1
@@ -546,22 +547,22 @@ try:                # there is an error so you can read it
 
 
     def reaction_time_test():
-        print("Reation Time Test by Brandon, R-Bay, and Carter")
+        print("Reaction Time Test by Brandon, R-Bay, and Carter")
         print(Fore.CYAN + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
         while True:
-            print() # I hate everthing about this. I know it looks bad
+            print() # I hate everything about this. I know it looks bad
             print("This will do 5 runs and average them")
             print("You will hit enter when you see the alert")
             print("The time between the runs will vary")
-            print("Python isnt that fast, so don't trust the results too much")
+            print("Python isn't that fast, so don't trust the results too much")
 
             ready = input("Press enter when you are ready ")
             print("test starting...")
             if "menu" in ready:
                 ingame_menu(reaction_time_test)
             time.sleep(1)
-            cc()    # clears the jibberish from above
+            cc()    # clears the gibberish from above
 
 
             time_start = 0
@@ -573,8 +574,8 @@ try:                # there is an error so you can read it
                 varied_delay = random.randint(1,5)
                 time.sleep(varied_delay)
 
-                if linux_mode == False: 
-                    import msvcrt           # msvcrt is Windows only. IDK what to do for cothers
+                if linux_mode == False:
+                    import msvcrt           # msvcrt is Windows only. IDK what to do for others
                     while msvcrt.kbhit():   # clears the input buffer so you can't cheat
                         msvcrt.getch()      # Only works on Windows
 
@@ -586,8 +587,8 @@ try:                # there is an error so you can read it
                 time_start = t_start
                 time_stop = t_stop
 
-                pre_round = time_stop - time_start   
-                post_round = round(pre_round, 3)    # We dont need 290384209 million point precision
+                pre_round = time_stop - time_start
+                post_round = round(pre_round, 3)    # We don't need 290384209 million point precision
 
                 # turns seconds into ms (if more than 1 second, things get screwy and im too stupid to fix)
                 second_with_ms = str(post_round)
@@ -625,7 +626,7 @@ try:                # there is an error so you can read it
             if "menu" in amount:
                 ingame_menu(dice)
 
-            if amount.isdigit():    # checks that the input is an intiger
+            if amount.isdigit():    # checks that the input is an integer
                 print("rolling the dice...")
                 time.sleep(0.5)
 
@@ -642,7 +643,7 @@ try:                # there is an error so you can read it
                         print("You rolled a 1")
                         total += 1
 
-                    elif roll == 2:  
+                    elif roll == 2:
                         print("|-----|")
                         print("| O   |")
                         print("|     |")
@@ -652,7 +653,7 @@ try:                # there is an error so you can read it
                         total += 2
 
                     elif roll == 3:
-                        print("|-----|") 
+                        print("|-----|")
                         print("|     |")
                         print("|O O O|")
                         print("|     |")
@@ -691,11 +692,11 @@ try:                # there is an error so you can read it
                 print("The dice add up to " + str(total))
                 print()
                 ingame_menu(dice)
-                
-            else:    
-                print("you did a sussy baka D: (Didn't enter an intiger)")  # if you need to sue/disappear someone for this,
+
+            else:
+                print("you did a sussy baka D: (Didn't enter an integer)")  # if you need to sue/disappear someone for this,
                 ingame_menu(dice)                                           # sue Brandon. I added it, not my group partners.
-                                                                            
+
 
     def game_credits():
         print("Thanks for playing!")
@@ -724,7 +725,7 @@ try:                # there is an error so you can read it
         print("~(˘▾˘~)")
         print()
         print("The faces don't display properly in the Windows terminal :(")
-        print("Maybe use an IDE or a diffent thingimabob")
+        print("Maybe use an IDE or a different thingamabob")
 
         time.sleep(2)
         settings_menu()
@@ -732,20 +733,20 @@ try:                # there is an error so you can read it
 
     def settings_menu():
         print("Settings options are:")
-        print("1: Toggle Music")   
+        print("1: Toggle Music")
         print("2: Toggle debugging mode")
         print("3: View Credits")
-        print("4. Open Document explaing this game")
+        print("4. Open Document explaining this game")
         print()
         print("5: Go back to main menu")
         print("6: Quit Game")
         print()
         if global_cut_music == True:
             print("Music toggle disabled for compatibility")
-    
+
         global enable_music
         which_setting = input("Which setting would you like to use? ")
-        if "1" in which_setting: 
+        if "1" in which_setting:
             if not enable_music:
                 enable_music = 1
                 cc()
@@ -811,8 +812,8 @@ try:                # there is an error so you can read it
 
         if global_cut_music == False:
             for x in range(1):
-                cd()                              
-                pygame.mixer.music.load("GBsound.mp3") 
+                cd()
+                pygame.mixer.music.load("GBsound.mp3")
                 pygame.mixer.music.play()
 
         # help
@@ -839,13 +840,13 @@ try:                # there is an error so you can read it
         if enable_debug_flags_main == True:
             debug_flags()
         print()
-        if enable_music == True:    
+        if enable_music == True:
             if global_cut_music == False:   # these prevent errors caused by displaying the song
                 if rickroll_professor == True:
                     print("🎵 You know the rules, and so do I 🎵")
                 else:
-                    size = len(rand_song)   
-                    mod_string = rand_song[:size - 4] # removes file extention 
+                    size = len(rand_song)
+                    mod_string = rand_song[:size - 4] # removes file extension
                     print("Now playing: " + Fore.LIGHTMAGENTA_EX + mod_string)
 
 
@@ -883,17 +884,17 @@ try:                # there is an error so you can read it
             cc()
             settings_menu()
         elif "s" in which_game: # you cant have <or> in one thing when next to <in>
-            cc()                
+            cc()
             settings_menu()
         elif which_game == ":D":
-            if enable_debug_flags_main == False:   
+            if enable_debug_flags_main == False:
                 if e_egg >= game_count:  # yes you could play a game multiple times to get to game_count, but this is simple
                     cc()
                     webbrowser.open("https://imgur.com/a/mYYsmRu", autoraise=False)
                     main_menu() # autoraise option does nothing. Windows moment
                 else:
                     cc()
-                    print(Fore.RED + "You need to win/play all the games first!")  
+                    print(Fore.RED + "You need to win/play all the games first!")
                     main_menu()
             else: # bypasses the play all games requirement to open easter egg
                 cc()
@@ -903,11 +904,11 @@ try:                # there is an error so you can read it
             goodbye()
         elif "q" in which_game:
             goodbye()
-        else:   
-            cc()   
+        else:
+            cc()
             print(Fore.RED + "Invalid input")
-            main_menu()    
-    main_menu()  
+            main_menu()
+    main_menu()
 
 
 except Exception:
