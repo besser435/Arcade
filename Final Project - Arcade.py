@@ -16,7 +16,7 @@ def main_notes():   # to collapse the text below in the IDE
 
     This game requires a few libraries, they can be found below.
     A batch file is included if you dont have them or are too
-    lazy to to copy and pase the stuff below
+    lazy to copy and pase the stuff below
 
     """
 # SPAGHETTI CODE STATUS: ITALIAN
