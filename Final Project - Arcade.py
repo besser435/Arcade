@@ -18,7 +18,6 @@ def main_notes():   # to collapse the text below in the IDE
     A batch file is included to make this effortless
 
     """
-
 # SPAGHETTI CODE STATUS: ITALIAN
 # HOURS WASTED ON DEBUGGING AND USELESS FEATURES SO FAR: 369
 
@@ -41,12 +40,12 @@ try:                # there is an error so you can read it
 
     # options
     enable_music = 1
-    rickroll_professor = 0
+    rickroll_professor = 1
     global_cut_music = 0            # see message below
     game_count = 5                  # used for some stuff (5 currently)
-    enable_debug_flags_main = 1     # its sad that this is even a thing
+    enable_debug_flags_main = 0     # its sad that this is even a thing
     linux_mode = 0                  # only tested on Ubuntu, it works there
-    music_vol = 0.01
+    music_vol = 0.7
 
     '''
     Enable this option if you don't have the music files, or are getting
@@ -120,7 +119,7 @@ try:                # there is an error so you can read it
     def ingame_menu(replay_game):
         print()
         print("Would you like to:")
-        print(Fore.GREEN + "1: Play Again")
+        print(Fore.GREEN + "a1: Play Again")
         print(Fore.BLUE + "2: Return to Menu")
         print(Fore.RED + "3: Quit the Program")
         ask_menu = input()
