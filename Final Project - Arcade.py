@@ -7,7 +7,7 @@ def main_notes():   # to collapse the text below in the IDE
     This document has some important things to note
     https://docs.google.com/document/d/1z0a9XA7nS2HSgqRiNl7OAoM2NchoCG0EkOCNeLv4DfM/edit?usp=sharing
 
-    Linux_mode disables a few things so this can run on there                  
+    linux_mode disables a few things so this can run on there                  
 
     We are aware that this is a royal mess.
     In the future we hope to do better.
@@ -15,7 +15,8 @@ def main_notes():   # to collapse the text below in the IDE
     Reaction time and maybe the music requires to be ran on Windows
 
     This game requires a few libraries, they can be found below.
-    A batch file is included to make this effortless
+    A batch file is included if you dont have them or are too
+    lazy to to copy and pase the stuff below
 
     """
 # SPAGHETTI CODE STATUS: ITALIAN
@@ -39,8 +40,9 @@ try:                # there is an error so you can read it
 
 
     # options
+
     enable_music = 1
-    rickroll_professor = 1
+    rickroll = 1
     global_cut_music = 0            # see message below
     game_count = 5                  # used for some stuff (5 currently)
     enable_debug_flags_main = 0     # its sad that this is even a thing
@@ -80,7 +82,7 @@ try:                # there is an error so you can read it
         print()
         print(Fore.YELLOW + "          Enable music: " + str(enable_music))
         print(Fore.YELLOW + "          Music nuke: " + str(global_cut_music))
-        print(Fore.YELLOW + "          Rick Roll: " + str(rickroll_professor))
+        print(Fore.YELLOW + "          Rick Roll: " + str(rickroll))
         print(Fore.YELLOW + "          CWD: " + os.getcwd())
 
 
@@ -93,8 +95,7 @@ try:                # there is an error so you can read it
         pygame.mixer.music.set_volume(music_vol)
 
         if enable_music == True:
-            if global_cut_music == False:               # its in music_logic, but still needed. sometimes logic is
-                # skipped
+            if global_cut_music == False:     # its in music_logic, but still needed. sometimes logic is skipped
                 for x in range(1):
                     pygame.mixer.music.load(rand_song)   # egg
                     pygame.mixer.music.play(fade_ms = 4000)
@@ -102,11 +103,10 @@ try:                # there is an error so you can read it
 
 
     def music_logic():
-        if global_cut_music == False:
-            if enable_music == True:         # so    many    ifs. I don't even understand my own code anymore
-                if rickroll_professor == False:
+        if global_cut_music == False and enable_music == True:       
+                if rickroll == False: # so    many    ifs. I don't even understand my own code anymore
                     music_play()
-                elif rickroll_professor == True:
+                elif rickroll == True:
                     pygame.mixer.music.set_volume(music_vol)
                     cd()
                     pygame.mixer.music.load("wehadto.mp3")
@@ -731,6 +731,9 @@ try:                # there is an error so you can read it
 
 
     def settings_menu():
+        global enable_music
+        global rickroll
+        global enable_debug_flags_main
         print("Settings options are:")
         print("1: Toggle Music")
         print("2: Toggle debugging mode")
@@ -743,7 +746,6 @@ try:                # there is an error so you can read it
         if global_cut_music == True:
             print("Music toggle disabled for compatibility")
 
-        global enable_music
         which_setting = input("Which setting would you like to use? ")
         if "1" in which_setting:
             if not enable_music:
@@ -757,9 +759,9 @@ try:                # there is an error so you can read it
                 enable_music = 0
                 if global_cut_music == False: print("Music Off")
                 pygame.mixer.music.fadeout(750)
+                rickroll = 0
                 settings_menu()
         elif "2" in which_setting:
-            global enable_debug_flags_main
             if not enable_debug_flags_main:
                 enable_debug_flags_main = 1
                 cc()
@@ -784,7 +786,6 @@ try:                # there is an error so you can read it
         elif "5" in which_setting:
             cc()
             main_menu()
-
         elif "6" in which_setting:
             goodbye()
         elif "q" in which_setting:
@@ -800,7 +801,7 @@ try:                # there is an error so you can read it
         if linux_mode == True:
             tprint("ATTENTION,   I   AM   USING   LINUX")
             time.sleep(3)
-            # It's meant to demonstrate function of the Linux mode
+            # It's meant to show that linux mode is on.
             # not because its a stereotype that linux users
             # must announce that they are using linux          
     pls_ignore()
@@ -836,13 +837,15 @@ try:                # there is an error so you can read it
     def main_menu():    # also contains easter egg code
         print("Arcade for IFT101 by Carter, R-Bay, and Brandon")
         print("November 2021")
+        global rickroll
+        global enable_music
         if enable_debug_flags_main == True:
             debug_flags()
         print()
-        if enable_music == True:
-            if global_cut_music == False:   # these prevent errors caused by displaying the song
-                if rickroll_professor == True:
+        if enable_music == True and global_cut_music == False: # this prevents errors caused by displaying the song
+                if rickroll == True:
                     print("🎵 You know the rules, and so do I 🎵")
+                    print("Enter r to change to normal music")    # why would you want to lol
                 else:
                     size = len(rand_song)
                     mod_string = rand_song[:size - 4] # removes file extension
@@ -888,8 +891,8 @@ try:                # there is an error so you can read it
         elif which_game == ":D":
             if enable_debug_flags_main == False:
                 if e_egg >= game_count:  # yes you could play a game multiple times to get to game_count, but this is simple
-                    cc()
-                    webbrowser.open("https://imgur.com/a/mYYsmRu", autoraise=False)
+                    cc()                    
+                    webbrowser.open("https://imgur.com/a/mYYsmRu", autoraise=False) # why
                     main_menu() # autoraise option does nothing. Windows moment
                 else:
                     cc()
@@ -897,12 +900,17 @@ try:                # there is an error so you can read it
                     main_menu()
             else: # bypasses the play all games requirement to open easter egg
                 cc()
-                webbrowser.open("https://imgur.com/a/mYYsmRu", autoraise=False)
+                webbrowser.open("https://imgur.com/a/mYYsmRu", autoraise=False) # why
                 main_menu()
         elif "7" in which_game:
             goodbye()
         elif "q" in which_game:
             goodbye()
+        elif "r" in which_game and rickroll == True:
+            cc()
+            rickroll = 0         
+            music_logic()
+            main_menu()
         else:
             cc()
             print(Fore.RED + "Invalid input")
