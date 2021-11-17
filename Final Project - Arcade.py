@@ -23,11 +23,11 @@ def main_notes():   # to collapse the text below in the IDE
 # HOURS WASTED ON DEBUGGING AND USELESS FEATURES SO FAR: 369
 
 
-from threading import current_thread
+
 import traceback    # prevents the terminal from closing if
 try:                # there is an error so you can read it
 
-    import webbrowser, random, pygame, time, sys, os
+    import webbrowser, random, pygame, time, sys, PIL, os
     from colorama import init                   # pip install colorama
     init()
     from colorama import Fore, Back, Style
@@ -65,14 +65,18 @@ try:                # there is an error so you can read it
 
     def cc():   # shortened this long command to cc()
         os.system("cls" if os.name == "nt" else "clear")
-        # however, it is required in some places
+        # the long version is required in some places
     cc()
 
 
     def cd():   # changes directory to where the .py file is
-        abspath = os.path.abspath(sys.argv[0])
-        dname = os.path.dirname(abspath)
-        os.chdir(dname)
+        try:
+            abspath = os.path.abspath(sys.argv[0])
+            dname = os.path.dirname(abspath)
+            os.chdir(dname)
+        except:
+            print(Fore.RED + "cd error")
+    cd()
 
 
     def debug_flags():
@@ -88,32 +92,40 @@ try:                # there is an error so you can read it
 
 
     def music_play():
-        cd()
-        global current_song
-        global rand_song
-        songs = ["Climate Nuclear.mp3", "The Egg.mp3", "Nuclear Death Toll.mp3"]
-        rand_song = random.choice(songs)
-        pygame.mixer.music.set_volume(music_vol)
+        try:    # music stuff can be prone to errors, so thats why it is special and gets its own thing
+            cd()
+            global current_song
+            global rand_song
+            songs = ["Climate Nuclear.mp3", "The Egg.mp3", "Nuclear Death Toll.mp3"]
+            rand_song = random.choice(songs)
+            pygame.mixer.music.set_volume(music_vol)
 
-        if enable_music == True:
-            if global_cut_music == False:     # its in music_logic, but still needed. sometimes logic is skipped
-                for x in range(1):
-                    pygame.mixer.music.load(rand_song)   # egg
-                    pygame.mixer.music.play(fade_ms = 4000)
-                    pygame.event.wait()
+            
+            if enable_music == True:
+                if global_cut_music == False:     # its in music_logic, but still needed. sometimes logic is skipped
+                    for x in range(1):  #IDK why by PyGame needs audio in loops (I think)
+                        pygame.mixer.music.load(rand_song)   # egg
+                        pygame.mixer.music.play(fade_ms = 4000)
+                        pygame.event.wait()
+        except:
+            print(Fore.RED + "music_play error")    
 
 
     def music_logic():
-        if global_cut_music == False and enable_music == True:       
-                if rickroll == False: # so    many    ifs. I don't even understand my own code anymore
-                    music_play()
-                elif rickroll == True:
-                    pygame.mixer.music.set_volume(music_vol)
-                    cd()
-                    pygame.mixer.music.load("wehadto.mp3")
-                    pygame.mixer.music.play()
-                    pygame.event.wait()
-                    # Never gonna let you down     
+        try:
+            if global_cut_music == False and enable_music == True:       
+                    if rickroll == False: 
+                        music_play()
+                    elif rickroll == True:
+                        # You know the rules and so do I
+                        pygame.mixer.music.set_volume(music_vol)
+                        cd()
+                        pygame.mixer.music.load("wehadto.mp3")
+                        pygame.mixer.music.play()
+                        pygame.event.wait()
+                        # Never gonna let you down 
+        except:
+            print("music_logic error")    
     music_logic()
 
 
@@ -127,8 +139,6 @@ try:                # there is an error so you can read it
         if "1" in ask_menu:
             cc()
             replay_game()
-            print("                     playing again")
-
         elif "2" in ask_menu:
             cc()
             main_menu()
@@ -207,7 +217,7 @@ try:                # there is an error so you can read it
                     print('{//success.B7D1-Neuralink// ["est. 8.3 bill eliminated"]}')   #    :)
                     print('{//global-calc.processing_power{issue "ON" for IoT}')    # I like obscene amounts of processing power
                     time.sleep(0.1)
-                    print('//launch.rockets [count=all arg- s- lightspeed] galactic-payload[asteroid 3(goal=spread)]')   #asteroid 3
+                    print('//launch.rockets [count=all arg- s- lightspeed] galactic-payload[asteroid 3(goal=spread)]')   # asteroid 3
                     time.sleep(0.1)
                     print("Operation Asteroid2 Complete.")               # "I mean, can you really disagree?" -Thanos, probably
                     time.sleep(2)
@@ -220,7 +230,7 @@ try:                # there is an error so you can read it
             if skip_rig_ask == True:
                 if enable_debug_flags_main == 1: print(Fore.YELLOW + "                          skip_rig_ask = " + str(skip_rig_ask))
             else:
-                nonlocal enable_rig   # took me 20 minutes to figure out where this needed to go haha :sad:
+                nonlocal enable_rig   # took me 20 minutes to figure out where this needed to go haha
                 ask_for_rig = input("would you like to rig the game? y/n ")
                 if ask_for_rig == "y":
                     enable_rig = True
@@ -237,9 +247,9 @@ try:                # there is an error so you can read it
                 print()
                 print(Fore.CYAN + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
-                if enable_debug_flags_main == 1: print(Fore.YELLOW + "Game is rigged in def game(): " + str(enable_rig))
                 # had issues with scopes earlier
-
+                if enable_debug_flags_main == 1: print(Fore.YELLOW + "Game is rigged in def game(): " + str(enable_rig))
+                
                 class player_entry:
                     # User inputs their play here
                     print("Enter " + rolla + ", " + rollb + ", " + Fore.RESET + "or " + rollc)
@@ -514,7 +524,6 @@ try:                # there is an error so you can read it
 
             print("Word: ", output)
             print(guesses_left, "guesses left")
-
             guess = input("Enter lowercase letter, complete word, or phrase: ")
             if "menu" in guess:
                 ingame_menu(hangman)
@@ -802,10 +811,11 @@ try:                # there is an error so you can read it
         if linux_mode == True:
             tprint("ATTENTION,   I   AM   USING   LINUX")
             time.sleep(3)
-            # It's meant to show that linux mode is on.
+            # It's meant to show that linux mode is enabled.
             # not because its a stereotype that linux users
-            # must announce that they are using linux          
+            # must announce that they are using linux or anything        
     pls_ignore()
+
 
     def nft():
         # not really an arcade game, this is just me taking shots at millennials 
@@ -815,21 +825,21 @@ try:                # there is an error so you can read it
         image = ImageGrab.grab(bbox=())
         image.save("ctrl+c.png")    # just copies the NFTs lol
 
-        import PIL
+        
         image = PIL.Image.open("ctrl+c.png")
-        image.show()    # shows NFTs to you for FREE! You now own an image for FREE!
+        image.show()                # shows NFTs to you for FREE! You now own an image for FREE!
         cc()
         ingame_menu(nft)
-        
+
 
     def goodbye():
         bye_delay = 0.07
+
         if global_cut_music == False:
             for x in range(1):
                 cd()
                 pygame.mixer.music.load("GBsound.mp3")
                 pygame.mixer.music.play()
-
         # help
         sys.stdout.write(Fore.RED +"G")
         time.sleep(bye_delay)
@@ -900,11 +910,10 @@ try:                # there is an error so you can read it
         elif "6" in which_game:
             cc()
             nft()
-        elif "7" in which_game:
+        elif "7" in which_game: # you cant have <or> in one thing when next to <in>
             cc()
-            settings_menu()#
-
-        elif "s" in which_game: # you cant have <or> in one thing when next to <in>
+            settings_menu()
+        elif "s" in which_game: 
             cc()
             settings_menu()
         elif which_game == ":D":
