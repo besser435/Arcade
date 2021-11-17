@@ -36,11 +36,12 @@ try:                # there is an error so you can read it
     pygame.mixer.init()
     from time import perf_counter
     from statistics import mean
+    from PIL import ImageGrab                   # pip install pillow
     from art import *                           # pip install art
+    
 
 
     # options
-
     enable_music = 1
     rickroll = 1
     global_cut_music = 0            # see message below
@@ -119,7 +120,7 @@ try:                # there is an error so you can read it
     def ingame_menu(replay_game):
         print()
         print("Would you like to:")
-        print(Fore.GREEN + "a1: Play Again")
+        print(Fore.GREEN + "1: Play Again")
         print(Fore.BLUE + "2: Return to Menu")
         print(Fore.RED + "3: Quit the Program")
         ask_menu = input()
@@ -806,10 +807,23 @@ try:                # there is an error so you can read it
             # must announce that they are using linux          
     pls_ignore()
 
+    def nft():
+        # not really an arcade game, this is just me taking shots at millennials 
+        webbrowser.open("https://opensea.io/assets", autoraise=True) # shows NFTs
+        print("loading...")
+        time.sleep(4)               # waits for webpage to load. bad way of doing it I know
+        image = ImageGrab.grab(bbox=())
+        image.save("ctrl+c.png")    # just copies the NFTs lol
+
+        import PIL
+        image = PIL.Image.open("ctrl+c.png")
+        image.show()    # shows NFTs to you for FREE! You now own an image for FREE!
+        cc()
+        ingame_menu(nft)
+        
 
     def goodbye():
         bye_delay = 0.07
-
         if global_cut_music == False:
             for x in range(1):
                 cd()
@@ -861,9 +875,10 @@ try:                # there is an error so you can read it
         print("3: Hangman")
         print("4: Reaction Time Test")  # Only works on Windows. Its complicated why. ok not really
         print("5. Dice")
+        print("6. Free images")
         print()
-        print("6: Settings")
-        print("7: Quit Game")
+        print("7: Settings")
+        print("8: Quit Game")
 
         which_game = input("What would you like to do? ")
 
@@ -884,7 +899,11 @@ try:                # there is an error so you can read it
             dice()
         elif "6" in which_game:
             cc()
+            nft()
+        elif "7" in which_game:
+            cc()
             settings_menu()
+
         elif "s" in which_game: # you cant have <or> in one thing when next to <in>
             cc()
             settings_menu()
@@ -902,7 +921,7 @@ try:                # there is an error so you can read it
                 cc()
                 webbrowser.open("https://imgur.com/a/mYYsmRu", autoraise=False) # why
                 main_menu()
-        elif "7" in which_game:
+        elif "8" in which_game:
             goodbye()
         elif "q" in which_game:
             goodbye()
