@@ -902,7 +902,7 @@ try:                # there is an error so you can read it
             nft()
         elif "7" in which_game:
             cc()
-            settings_menu()
+            settings_menu()#
 
         elif "s" in which_game: # you cant have <or> in one thing when next to <in>
             cc()
