@@ -3,6 +3,7 @@ def main_notes():   # to collapse the text below in the IDE
     Arcade for IFT101 final project    
     November 2021                                      
     Written by Brandon, Carter, and R-Bay
+    v1.2.1
 
     This document has some important things to note
     https://docs.google.com/document/d/1z0a9XA7nS2HSgqRiNl7OAoM2NchoCG0EkOCNeLv4DfM/edit?usp=sharing
@@ -17,7 +18,6 @@ def main_notes():   # to collapse the text below in the IDE
     This game requires a few libraries, they can be found below.
     A batch file is included if you dont have them or are too
     lazy to copy and pase the stuff below
-
     """
 # SPAGHETTI CODE STATUS: ITALIAN
 # HOURS WASTED ON DEBUGGING AND USELESS FEATURES SO FAR: 369
@@ -69,7 +69,7 @@ try:                # there is an error so you can read it
     cc()
 
 
-    def cd():   # changes directory to where the .py file is
+    def cd():   # changes directory to where the .py file is. for the audio
         try:
             abspath = os.path.abspath(sys.argv[0])
             dname = os.path.dirname(abspath)
@@ -93,14 +93,12 @@ try:                # there is an error so you can read it
 
     def music_play():
         try:    # music stuff can be prone to errors, so thats why it is special and gets its own thing
-            cd()
             global current_song
             global rand_song
             songs = ["Climate Nuclear.mp3", "The Egg.mp3", "Nuclear Death Toll.mp3"]
             rand_song = random.choice(songs)
             pygame.mixer.music.set_volume(music_vol)
 
-            
             if enable_music == True:
                 if global_cut_music == False:     # its in music_logic, but still needed. sometimes logic is skipped
                     for x in range(1):  #IDK why by PyGame needs audio in loops (I think)
@@ -119,13 +117,12 @@ try:                # there is an error so you can read it
                     elif rickroll == True:
                         # You know the rules and so do I
                         pygame.mixer.music.set_volume(music_vol)
-                        cd()
                         pygame.mixer.music.load("wehadto.mp3")
                         pygame.mixer.music.play()
                         pygame.event.wait()
-                        # Never gonna let you down 
+                        # Never gonna let you down               
         except:
-            print("music_logic error")    
+            print(Fore.RED + "music_logic error")    
     music_logic()
 
 
@@ -558,70 +555,73 @@ try:                # there is an error so you can read it
     def reaction_time_test():
         print("Reaction Time Test by Brandon, R-Bay, and Carter")
         print(Fore.CYAN + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        try:
+            while True:
+                print() # I hate everything about this. I know it looks bad
+                print("This will do 5 runs and average them")
+                print("You will hit enter when you see the alert")
+                print("The time between the runs will vary")
+                print("Python isn't that fast, so don't trust the results too much")
 
-        while True:
-            print() # I hate everything about this. I know it looks bad
-            print("This will do 5 runs and average them")
-            print("You will hit enter when you see the alert")
-            print("The time between the runs will vary")
-            print("Python isn't that fast, so don't trust the results too much")
+                ready = input("Press enter when you are ready ")
+                print("test starting...")
+                if "menu" in ready:
+                    ingame_menu(reaction_time_test)
+                time.sleep(1)
+                cc()    # clears the gibberish from above
 
-            ready = input("Press enter when you are ready ")
-            print("test starting...")
-            if "menu" in ready:
-                ingame_menu(reaction_time_test)
-            time.sleep(1)
-            cc()    # clears the gibberish from above
+                
+                time_start = 0
+                time_stop = 0
+                times = []
+                alert = (Fore.RED + Back.WHITE + "⠀⠀⠀⠀⠀HIT ENTER⠀⠀⠀⠀⠀" + Fore.RESET + Back.RESET)
+                if linux_mode == True: print("You can cheat now lol")
+                for i in range(5):  # num = how many times to test
+                    varied_delay = random.randint(1,5)
+                    time.sleep(varied_delay)
+
+                    if linux_mode == False:
+                        import msvcrt           # msvcrt is Windows only. IDK what to do for others
+                        while msvcrt.kbhit():   # clears the input buffer so you can't cheat
+                            msvcrt.getch()      # Only works on Windows
+                    
+                    # the test
+                    t_start = perf_counter()
+                    input(alert)
+                    t_stop = perf_counter()
+                    cc()
+                    time_start = t_start
+                    time_stop = t_stop
+
+                    pre_round = time_stop - time_start
+                    post_round = round(pre_round, 3)    # We don't need 290384209 million point precision
+
+                    # turns seconds into ms (if more than 1 second, things get screwy and im too stupid to fix)
+                    second_with_ms = str(post_round)
+                    result_ms = second_with_ms.replace("0.", "")
+                    print(result_ms + "ms")
+                    times.append(result_ms)     # all of this is so bad
 
 
-            time_start = 0
-            time_stop = 0
-            times = []
-            alert = (Fore.RED + Back.WHITE + "⠀⠀⠀⠀⠀HIT ENTER⠀⠀⠀⠀⠀" + Fore.RESET + Back.RESET)
-            if linux_mode == True: print("You can cheat now lol")
-            for i in range(5):  # num = how many times to test
-                varied_delay = random.randint(1,5)
-                time.sleep(varied_delay)
-
-                if linux_mode == False:
-                    import msvcrt           # msvcrt is Windows only. IDK what to do for others
-                    while msvcrt.kbhit():   # clears the input buffer so you can't cheat
-                        msvcrt.getch()      # Only works on Windows
-
-                # the test
-                t_start = perf_counter()
-                input(alert)
-                t_stop = perf_counter()
+                for i in range(0, len(times)):  # converts times list to int
+                    times[i] = int(times[i])
+                
+                avg = mean(times)
                 cc()
-                time_start = t_start
-                time_stop = t_stop
+                print("Your average reaction time is " + str(avg) + "ms")
+                print("All of your times were: ", end="")
+                print(*times, sep = "ms, ", end="")
+                print("ms")     # adds ms to the last number. the line above only adds ms between nums, not after
 
-                pre_round = time_stop - time_start
-                post_round = round(pre_round, 3)    # We don't need 290384209 million point precision
-
-                # turns seconds into ms (if more than 1 second, things get screwy and im too stupid to fix)
-                second_with_ms = str(post_round)
-                result_ms = second_with_ms.replace("0.", "")
-                print(result_ms + "ms")
-                times.append(result_ms)     # all of this is so bad
-
-
-            for i in range(0, len(times)):  # converts times list to int
-                times[i] = int(times[i])
-
-            avg = mean(times)
-            cc()
-            print("Your average reaction time is " + str(avg) + "ms")
-            print("All of your times were: ", end="")
-            print(*times, sep = "ms, ", end="")
-            print("ms")     # adds ms to the last number. the line above only adds ms between nums, not after
-
-            if avg <= 400:  # Good luck!
-                global e_egg
-                e_egg += 1
-            if avg <= 200:
-                print("This time is literally impossible. (without cheating)")
-            ingame_menu(reaction_time_test)
+                if avg <= 400:  # Good luck!
+                    global e_egg
+                    e_egg += 1
+                if avg <= 200:
+                    print("This time is literally impossible. (without cheating)")
+                ingame_menu(reaction_time_test)
+        except:
+            print(Fore.RED + "reaction_time_test error")
+            main_menu()
 
 
     def dice():
@@ -837,7 +837,6 @@ try:                # there is an error so you can read it
 
         if global_cut_music == False:
             for x in range(1):
-                cd()
                 pygame.mixer.music.load("GBsound.mp3")
                 pygame.mixer.music.play()
         # help
