@@ -1,9 +1,9 @@
 def main_notes():   # to collapse the text below in the IDE
     """
     Arcade for IFT101 final project    
-    November 2021                                      
+    11-17-21                                      
     Written by Brandon, Carter, and R-Bay
-    v1.2.1
+    v1.3
 
     This document has some important things to note
     https://docs.google.com/document/d/1z0a9XA7nS2HSgqRiNl7OAoM2NchoCG0EkOCNeLv4DfM/edit?usp=sharing
@@ -819,13 +819,24 @@ try:                # there is an error so you can read it
 
     def nft():
         # not really an arcade game, this is just me taking shots at millennials 
+        cc()
+        print(Fore.LIGHTGREEN_EX + "Read Me")
+        print()
+        print("Please wait 7 seconds before leaving the NFT site")
+
+        print("This is so it has a chance to load. Key word being chance")
+        print("If you do this again, the site might be cached and it will load faster")
+        print()
+        print("7 seconds because this site is slow as hell")
+        print("My testing was on a good computer with fiber internet lol")
+        nft_in = input("Press enter to continue")
+
         webbrowser.open("https://opensea.io/assets", autoraise=True) # shows NFTs
         print("loading...")
-        time.sleep(4)               # waits for webpage to load. bad way of doing it I know
+        time.sleep(7)               # waits for webpage to load. bad way of doing it I know
         image = ImageGrab.grab(bbox=())
         image.save("ctrl+c.png")    # just copies the NFTs lol
 
-        
         image = PIL.Image.open("ctrl+c.png")
         image.show()                # shows NFTs to you for FREE! You now own an image for FREE!
         cc()
