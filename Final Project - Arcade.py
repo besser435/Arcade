@@ -1,11 +1,13 @@
 def main_notes():   # to collapse the text below in the IDE
-    """
+    '''
     Arcade for IFT101 final project    
     11-17-21                                      
     Written by Brandon, Carter, and R-Bay
     v1.3
+    https://github.com/besser435/Arcade.py
 
-    This document has some important things to note
+
+    This document has some important things to note:
     https://docs.google.com/document/d/1z0a9XA7nS2HSgqRiNl7OAoM2NchoCG0EkOCNeLv4DfM/edit?usp=sharing
 
     linux_mode disables a few things so this can run on there                  
@@ -18,16 +20,16 @@ def main_notes():   # to collapse the text below in the IDE
     This game requires a few libraries, they can be found below.
     A batch file is included if you dont have them or are too
     lazy to copy and pase the stuff below
-    """
+    '''
 # SPAGHETTI CODE STATUS: ITALIAN
 # HOURS WASTED ON DEBUGGING AND USELESS FEATURES SO FAR: 369
 
 
-
+from os import read
 import traceback    # prevents the terminal from closing if
 try:                # there is an error so you can read it
 
-    import webbrowser, random, pygame, time, sys, PIL, os
+    import webbrowser, keyboard, random, pygame, time, sys, PIL, os
     from colorama import init                   # pip install colorama
     init()
     from colorama import Fore, Back, Style
@@ -233,7 +235,7 @@ try:                # there is an error so you can read it
                     enable_rig = True
                     print("Game is rigged: " + str(enable_rig))
                     Operation_Asteroid2()
-                elif ask_for_rig == "menu":
+                elif "menu" in ask_for_rig:
                     ingame_menu(rps)
                 else:
                     enable_rig = False
@@ -411,8 +413,8 @@ try:                # there is an error so you can read it
                     print()
                     input("Press enter to continue ")  # BUG hitting this on the last round closes the game. conflict with the menu
                     cc()
-                #if "menu" in cls_after_turn:    # this throws errors, not sure why
-                    #ingame_menu(rps)
+                if cls_after_turn == "menu": 
+                    ingame_menu(rps)
         game()
 
 
@@ -819,27 +821,56 @@ try:                # there is an error so you can read it
 
     def nft():
         # not really an arcade game, this is just me taking shots at millennials 
-        cc()
-        print(Fore.LIGHTGREEN_EX + "Read Me")
-        print()
-        print("Please wait 7 seconds before leaving the NFT site")
+        capture_key = "s"
+        save_name = "ctrl+c.png"
 
-        print("This is so it has a chance to load. Key word being chance")
-        print("If you do this again, the site might be cached and it will load faster")
-        print()
-        print("7 seconds because this site is slow as hell")
-        print("My testing was on a good computer with fiber internet lol")
-        nft_in = input("Press enter to continue")
+        cc()
+        cd()
+
+        def message():
+            print(Fore.LIGHTGREEN_EX + "Free image finder by R-Bay, Carter, and Brandon")
+            print()
+            print("This will get you a free image, for FREE!")
+            print("It is going to open an NFT website")
+            print("Once it loads and NFTs are visible, hit " + capture_key)
+            print("Step 4: Profit.")
+            print("???")
+            print()
+        message()
+
+
+        ready = input(Fore.RED + "Hit enter to continue " + Fore.RESET)
+        if "menu" in ready:
+            ingame_menu(nft)
+
 
         webbrowser.open("https://opensea.io/assets", autoraise=True) # shows NFTs
-        print("loading...")
-        time.sleep(7)               # waits for webpage to load. bad way of doing it I know
-        image = ImageGrab.grab(bbox=())
-        image.save("ctrl+c.png")    # just copies the NFTs lol
+        print("Waiting for keypress (" +  Fore.YELLOW + capture_key + ")")
 
-        image = PIL.Image.open("ctrl+c.png")
-        image.show()                # shows NFTs to you for FREE! You now own an image for FREE!
-        cc()
+
+        def screenshot():
+            image = ImageGrab.grab(bbox=())
+            image.save(save_name)    # just copies the NFTs lol
+
+            image = PIL.Image.open(save_name)
+            image.show()             # shows NFTs to you for FREE! You now own an image for FREE!
+
+
+        def end():
+            os.system("cls" if os.name == "nt" else "clear")
+            print("Congrats! You now own pixels that you didn't have to pay for!")
+            print("Image saved in: " + os.getcwd())
+
+
+        while True:     # thanks google
+            try:        # used try so that if user pressed other than the given key error will not be shown
+                if keyboard.is_pressed(capture_key):  
+                    screenshot()
+                    end()
+                    break 
+            except:
+                break   # if user pressed a key other than the given key the loop will break
+ 
         ingame_menu(nft)
 
 
@@ -955,7 +986,7 @@ try:                # there is an error so you can read it
             main_menu()
     main_menu()
 
-
 except Exception:
     print(traceback.format_exc())
     input("Press enter to exit")
+
