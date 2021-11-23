@@ -4,6 +4,7 @@ def main_notes():   # to collapse the text below in the IDE
     11-22-21                                      
     Written by Brandon, Carter, and R-Bay
     v1.4 beta 1
+    * GUI added but not implimented 
     
     https://github.com/besser435/Arcade.py
 
@@ -44,6 +45,7 @@ try:                # there is an error so you can read it
     from tkinter import *                       # pip install tk
     from tkinter import messagebox
     import tkinter.font as font
+    import tkinter as tk
     # AAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
 
     # options
@@ -132,94 +134,71 @@ try:                # there is an error so you can read it
 
 
     def gui_music():
-            
-        # window setup
-        res = (300, 170)
-        screen = pygame.display.set_mode(res)
+        root = Tk()
+        def debug():
+            print("debug")
 
-        width = screen.get_width()
-        height = screen.get_height()
-
-        pygame.display.set_caption("Music Options")
-        # BUG broken
-        #icon = pygame.image.load("note.png")
-        #pygame.display.set_icon(icon)
-
-        # button colors for when/when not hovered
-        color_light = (170,170,170)
-        color_dark = (100,100,100)
-        color_test = (100,255,90)
-
-        # button labels
-        color = (255,255,255)
-        smallfont = pygame.font.SysFont('Comic Sans', 20) # best font
-
-        next_song = smallfont.render("Next Song", True, color)
-        toggle = smallfont.render("On/Off", True, color)
-        vol_down = smallfont.render("Lower Volume", True, color)
-        vol_up = smallfont.render("Increase Volume", True, color)
-
-        '''
-        Needs:
-        music toggle
-        next song
-        volume slider is too hard, do buttons
-        to increase/decrease volume
-
-        '''
         while True:
-            # background color. dark mode colors right now, maybe add a flashbang mode
-            screen.fill((45, 45, 45))
+            # options
+            buttonFont = font.Font(family="Comic Sans MS", size=15) # button text properties
+            set_cursor = "heart"    # trek
+            btn_color = "green"
+            btn_background = "gray60"
+            background_color = "gray15"
+
             
-            # stores mouse coords
-            mouse = pygame.mouse.get_pos()
+            # window setup
+            root.title("peak ui design")
+            root.geometry("300x200")
+            root["bg"] = "gray15"   # keep this idk what it does
 
-            for ev in pygame.event.get():
-                if ev.type == pygame.QUIT:
-                    pygame.quit()
-                    
-                # checks if a mouse is clicked
-                if ev.type == pygame.MOUSEBUTTONDOWN:
-                    
-                    # button action 2       next song
-                    if width/2 <= mouse[0] <= width/2+140 and height/2 <= mouse[1] <= height/2+40:
-                        main_menu()
-                        
-                        
-                    # button action 1
-                    if width/2 <= mouse[0] <= width/2+140 and height/4 <= mouse[1] <= height/4+40:
-                        print("hello")
-                        print("hi")
-
-            # button 2 #        next song
-            if width/2 <= mouse[0] <= width/2+140 and height/2 <= mouse[1] <= height/2+40:  # hitbox
-                pygame.draw.rect(screen,color_light,[width/2,height/2, 140,40]) # last 2 nums are the size
-            else:      # dark
-                pygame.draw.rect(screen,color_dark,[width/2,height/2, 140,40])
-        
-
-            # button 1 # light
-            if width/2 <= mouse[0] <= width/2+140 and height/4 <= mouse[1] <= height/4+40:  
-                pygame.draw.rect(screen,color_light,[width/2,height/4, 140,40])
-            else:      # dark
-                pygame.draw.rect(screen,color_dark,[width/2,height/4, 140,40])
             
+            label_font = font.Font(family="Comic Sans MS", size=15)
+            label1 = tk.Label(master=root, text="Music Options", bg=background_color,font=label_font,fg = "green2")
+            label1.grid(column=0, row=0)
 
-     
-            # button 3 # light
-            #if width/2 <= mouse[0] <= width/2+140 and height/4 <= mouse[1] <= height/4+40:
-                #pygame.draw.rect(screen,color_light,[width/2,height/4,140,40])
-            #else:      # dark
-                #pygame.draw.rect(screen,color_dark,[width/2,height/4,140,40])            
+            '''
+            # old menu code from a different project. thats why its janky. I don't wanna delete it for reasons
+            def how_to_play():
+                print("seriously?!?!")
+                how_toPlay_msgbox = messagebox.askquestion("RPS Help", "Are you serious?!?!")
+                if how_toPlay_msgbox == "yes":
+                    sys.exit()
+                elif how_toPlay_msgbox == "no":
+                    print("Good.")
 
-            # adds button labels
-            screen.blit(next_song , (width/2+12,height/2))
-            screen.blit(toggle , (width/2+12,height/4))
-            #screen.blit(vol_up , (width/2+12,height/4))x
-            #screen.blit(vol_down , (width/2+12,height/4))
+            def flashbang():
+                print("hello")
+                new= Toplevel()
+                new.geometry("7680x4320") # 8K because why not. but by doing this the whole screen is flled with white
+                new.title("I did warn you")
+                #Create a Label in New window
+                Label(new, text="Get flashbanged lol", font=("Tahoma 17 bold")).pack(pady=30)
+            '''
+            
+            
+            def dark_mode():  #regular buttons. will go to light_mode if light mode is enabled in the options menu
+                # Toggle
+                btn_tog = Button(text = "Toggle Music", # this is kind of redundant because of the slider but ehhhhh
+                    fg = "green", command=debug, bg=btn_background, height=1, width=11, font=buttonFont, cursor=set_cursor)
+                btn_tog.grid(column=0, row=1)
 
-            pygame.display.update() # fin
+                # New Song
+                btn_new = Button(root, text = "New Song",
+                    fg = btn_color, command=debug, bg=btn_background, height=1, width=11, font=buttonFont, cursor=set_cursor)
+                btn_new.grid(column=2, row=1)
 
+                # Volume 
+                label_font = font.Font(family="Comic Sans MS", size=19)
+                vol_lab = tk.Label(master=root, text="Volume", bg=background_color,font=label_font,fg = "green2")
+                vol_lab.grid(column=0, row=5)
+
+                vol_scale = Scale(orient=HORIZONTAL,bg="gray60", length=130, width=15, sliderlength=10, from_=0, to=10, tickinterval=1)
+                vol_scale.grid(column=0, row=6)
+                
+
+            dark_mode()
+            root.mainloop()
 
     def ingame_menu(replay_game):
         print()
