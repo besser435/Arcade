@@ -3,7 +3,8 @@ def main_notes():   # to collapse the text below in the IDE
     Arcade for IFT101 final project    
     11-22-21                                      
     Written by Brandon, Carter, and R-Bay
-    v1.3.1
+    v1.4 beta 1
+    
     https://github.com/besser435/Arcade.py
 
 
@@ -40,11 +41,13 @@ try:                # there is an error so you can read it
     from statistics import mean
     from PIL import ImageGrab                   # pip install pillow
     from art import *                           # pip install art
-    
-
+    from tkinter import *                       # pip install tk
+    from tkinter import messagebox
+    import tkinter.font as font
+    # AAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
 
     # options
-    enable_music = 1
+    enable_music = 0
     rickroll = 1
     global_cut_music = 0            # see message below
     game_count = 5                  # used for some stuff (5 currently)
@@ -100,7 +103,7 @@ try:                # there is an error so you can read it
             songs = ["Climate Nuclear.mp3", "The Egg.mp3", "Nuclear Death Toll.mp3"]
             rand_song = random.choice(songs)
             pygame.mixer.music.set_volume(music_vol)
-
+            
             if enable_music == True:
                 if global_cut_music == False:     # its in music_logic, but still needed. sometimes logic is skipped
                     for x in range(1):  #IDK why by PyGame needs audio in loops (I think)
@@ -126,6 +129,96 @@ try:                # there is an error so you can read it
         except:
             print(Fore.RED + "music_logic error")    
     music_logic()
+
+
+    def gui_music():
+            
+        # window setup
+        res = (300, 170)
+        screen = pygame.display.set_mode(res)
+
+        width = screen.get_width()
+        height = screen.get_height()
+
+        pygame.display.set_caption("Music Options")
+        # BUG broken
+        #icon = pygame.image.load("note.png")
+        #pygame.display.set_icon(icon)
+
+        # button colors for when/when not hovered
+        color_light = (170,170,170)
+        color_dark = (100,100,100)
+        color_test = (100,255,90)
+
+        # button labels
+        color = (255,255,255)
+        smallfont = pygame.font.SysFont('Comic Sans', 20) # best font
+
+        next_song = smallfont.render("Next Song", True, color)
+        toggle = smallfont.render("On/Off", True, color)
+        vol_down = smallfont.render("Lower Volume", True, color)
+        vol_up = smallfont.render("Increase Volume", True, color)
+
+        '''
+        Needs:
+        music toggle
+        next song
+        volume slider is too hard, do buttons
+        to increase/decrease volume
+
+        '''
+        while True:
+            # background color. dark mode colors right now, maybe add a flashbang mode
+            screen.fill((45, 45, 45))
+            
+            # stores mouse coords
+            mouse = pygame.mouse.get_pos()
+
+            for ev in pygame.event.get():
+                if ev.type == pygame.QUIT:
+                    pygame.quit()
+                    
+                # checks if a mouse is clicked
+                if ev.type == pygame.MOUSEBUTTONDOWN:
+                    
+                    # button action 2       next song
+                    if width/2 <= mouse[0] <= width/2+140 and height/2 <= mouse[1] <= height/2+40:
+                        main_menu()
+                        
+                        
+                    # button action 1
+                    if width/2 <= mouse[0] <= width/2+140 and height/4 <= mouse[1] <= height/4+40:
+                        print("hello")
+                        print("hi")
+
+            # button 2 #        next song
+            if width/2 <= mouse[0] <= width/2+140 and height/2 <= mouse[1] <= height/2+40:  # hitbox
+                pygame.draw.rect(screen,color_light,[width/2,height/2, 140,40]) # last 2 nums are the size
+            else:      # dark
+                pygame.draw.rect(screen,color_dark,[width/2,height/2, 140,40])
+        
+
+            # button 1 # light
+            if width/2 <= mouse[0] <= width/2+140 and height/4 <= mouse[1] <= height/4+40:  
+                pygame.draw.rect(screen,color_light,[width/2,height/4, 140,40])
+            else:      # dark
+                pygame.draw.rect(screen,color_dark,[width/2,height/4, 140,40])
+            
+
+     
+            # button 3 # light
+            #if width/2 <= mouse[0] <= width/2+140 and height/4 <= mouse[1] <= height/4+40:
+                #pygame.draw.rect(screen,color_light,[width/2,height/4,140,40])
+            #else:      # dark
+                #pygame.draw.rect(screen,color_dark,[width/2,height/4,140,40])            
+
+            # adds button labels
+            screen.blit(next_song , (width/2+12,height/2))
+            screen.blit(toggle , (width/2+12,height/4))
+            #screen.blit(vol_up , (width/2+12,height/4))x
+            #screen.blit(vol_down , (width/2+12,height/4))
+
+            pygame.display.update() # fin
 
 
     def ingame_menu(replay_game):
@@ -753,8 +846,8 @@ try:                # there is an error so you can read it
         print("4: Open Document explaining this game")
         print("5: Music but in a bad gooey (not a thing yet)")
         print()
-        print("5: Go back to main menu")
-        print("6: Quit Game")
+        print("6: Go back to main menu")
+        print("7: Quit Game")
         print()
         if global_cut_music == True:
             print("Music toggle disabled for compatibility")
@@ -798,9 +891,12 @@ try:                # there is an error so you can read it
             main_menu()
         elif "5" in which_setting:
             cc()
-            main_menu()
+            gui_music()
         elif "6" in which_setting:
-            goodbye()
+            cc()
+            main_menu()
+        elif "7" in which_setting:
+           goodbye()
         elif "q" in which_setting:
             goodbye()
         else:
@@ -981,6 +1077,8 @@ try:                # there is an error so you can read it
             rickroll = 0         
             music_logic()
             main_menu()
+        elif "x" in which_game and rickroll == True:
+            gui_music()
         else:
             cc()
             print(Fore.RED + "Invalid input")
