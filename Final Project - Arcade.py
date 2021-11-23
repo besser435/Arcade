@@ -1,9 +1,9 @@
 def main_notes():   # to collapse the text below in the IDE
     '''
     Arcade for IFT101 final project    
-    11-17-21                                      
+    11-22-21                                      
     Written by Brandon, Carter, and R-Bay
-    v1.3
+    v1.3.1
     https://github.com/besser435/Arcade.py
 
 
@@ -750,7 +750,8 @@ try:                # there is an error so you can read it
         print("1: Toggle Music")
         print("2: Toggle debugging mode")
         print("3: View Credits")
-        print("4. Open Document explaining this game")
+        print("4: Open Document explaining this game")
+        print("5: Music but in a bad gooey (not a thing yet)")
         print()
         print("5: Go back to main menu")
         print("6: Quit Game")
@@ -820,7 +821,7 @@ try:                # there is an error so you can read it
 
 
     def nft():
-        # not really an arcade game, this is just me taking shots at millennials 
+        # not really an arcade game, this is just us taking shots at millennials 
         capture_key = "s"
         save_name = "ctrl+c.png"
 
@@ -925,8 +926,8 @@ try:                # there is an error so you can read it
         print("2: Bottle Flip")
         print("3: Hangman")
         print("4: Reaction Time Test")  # Only works on Windows. Its complicated why. ok not really
-        print("5. Dice")
-        print("6. Free images")
+        print("5: Dice")
+        print("6: Free images")
         print()
         print("7: Settings")
         print("8: Quit Game")
@@ -989,4 +990,3 @@ try:                # there is an error so you can read it
 except Exception:
     print(traceback.format_exc())
     input("Press enter to exit")
-
