@@ -1,3 +1,8 @@
+
+
+# If it's worth doing, it's worth overdoing. 
+
+
 def main_notes():   # to collapse the text below in the IDE
     '''
     Arcade for IFT101 final project    
