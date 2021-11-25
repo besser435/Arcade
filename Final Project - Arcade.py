@@ -3,7 +3,7 @@ def main_notes():   # to collapse the text below in the IDE
     Arcade for IFT101 final project    
     11-22-21                                      
     Written by Brandon, Carter, and R-Bay
-    v1.4 beta 1
+    v1.4 beta 2
     * GUI added but not implimented 
     
     https://github.com/besser435/Arcade.py
@@ -132,73 +132,101 @@ try:                # there is an error so you can read it
             print(Fore.RED + "music_logic error")    
     music_logic()
 
+    def toggle_music_gui():
+        global enable_music
+        global rickroll
+        if not enable_music:
+            enable_music = 1
+            cc()
+            if global_cut_music == False: print("Music On")
+            music_play()
+            #settings_menu() BUG causes runtime error
+
+        else:
+            cc()
+            enable_music = 0
+            if global_cut_music == False: print("Music Off")
+            pygame.mixer.music.fadeout(750)
+            rickroll = 0
+
 
     def gui_music():
-        root = Tk()
-        def debug():
-            print("debug")
+        cc()
+        print("Close GUI to continue...")
+        try:    # throws errors unde the rug so the rest of the code can continue.
+            root = Tk()
+            def debug():
+                print("debug")
 
-        while True:
-            # options
-            buttonFont = font.Font(family="Comic Sans MS", size=15) # button text properties
-            set_cursor = "heart"    # trek
-            btn_color = "green"
-            btn_background = "gray60"
-            background_color = "gray15"
+            while True:
+                # options
+                buttonFont = font.Font(family="Comic Sans MS", size=15) # button text properties
+                set_cursor = "heart"    # trek
+                btn_color = "green"
+                btn_background = "gray60"
+                background_color = "gray15"
 
-            
-            # window setup
-            root.title("peak ui design")
-            root.geometry("300x200")
-            root["bg"] = "gray15"   # keep this idk what it does
-
-            
-            label_font = font.Font(family="Comic Sans MS", size=15)
-            label1 = tk.Label(master=root, text="Music Options", bg=background_color,font=label_font,fg = "green2")
-            label1.grid(column=0, row=0)
-
-            '''
-            # old menu code from a different project. thats why its janky. I don't wanna delete it for reasons
-            def how_to_play():
-                print("seriously?!?!")
-                how_toPlay_msgbox = messagebox.askquestion("RPS Help", "Are you serious?!?!")
-                if how_toPlay_msgbox == "yes":
-                    sys.exit()
-                elif how_toPlay_msgbox == "no":
-                    print("Good.")
-
-            def flashbang():
-                print("hello")
-                new= Toplevel()
-                new.geometry("7680x4320") # 8K because why not. but by doing this the whole screen is flled with white
-                new.title("I did warn you")
-                #Create a Label in New window
-                Label(new, text="Get flashbanged lol", font=("Tahoma 17 bold")).pack(pady=30)
-            '''
-            
-            
-            def dark_mode():  #regular buttons. will go to light_mode if light mode is enabled in the options menu
-                # Toggle
-                btn_tog = Button(text = "Toggle Music", # this is kind of redundant because of the slider but ehhhhh
-                    fg = "green", command=debug, bg=btn_background, height=1, width=11, font=buttonFont, cursor=set_cursor)
-                btn_tog.grid(column=0, row=1)
-
-                # New Song
-                btn_new = Button(root, text = "New Song",
-                    fg = btn_color, command=debug, bg=btn_background, height=1, width=11, font=buttonFont, cursor=set_cursor)
-                btn_new.grid(column=2, row=1)
-
-                # Volume 
-                label_font = font.Font(family="Comic Sans MS", size=19)
-                vol_lab = tk.Label(master=root, text="Volume", bg=background_color,font=label_font,fg = "green2")
-                vol_lab.grid(column=0, row=5)
-
-                vol_scale = Scale(orient=HORIZONTAL,bg="gray60", length=130, width=15, sliderlength=10, from_=0, to=10, tickinterval=1)
-                vol_scale.grid(column=0, row=6)
                 
+                # window setup
+                root.title("peak ui design")
+                root.geometry("284x234")
+                root["bg"] = "gray15"   # keep this idk what it does
 
-            dark_mode()
-            root.mainloop()
+                
+                label_font = font.Font(family="Comic Sans MS", size=15)
+                label1 = tk.Label(master=root, text="Music Options", bg=background_color,font=label_font,fg = "green2")
+                label1.grid(column=0, row=0)
+
+                '''
+                # old menu code from a different project. thats why its janky. I don't wanna delete it for reasons
+                def how_to_play():|
+                    print("seriously?!?!")
+                    how_toPlay_msgbox = messagebox.askquestion("RPS Help", "Are you serious?!?!")
+                    if how_toPlay_msgbox == "yes":
+                        sys.exit()
+                    elif how_toPlay_msgbox == "no":
+                        print("Good.")
+
+                def flashbang():
+                    print("hello")
+                    new= Toplevel()
+                    new.geometry("7680x4320") # 8K because why not. but by doing this the whole screen is flled with white
+                    new.title("I did warn you")
+                    #Create a Label in New window
+                    Label(new, text="Get flashbanged lol", font=("Tahoma 17 bold")).pack(pady=30)
+                '''
+
+
+                def dark_mode():  #regular buttons. will go to light_mode if light mode is enabled in the options menu
+                    # Toggle
+                    btn_tog = Button(text = "Toggle Music", # this is kind of redundant because of the slider but ehhhhh
+                        fg = "green", command=toggle_music_gui, bg=btn_background, height=1, width=11, font=buttonFont, cursor=set_cursor)
+                    btn_tog.grid(column=0, row=1)
+
+                    # New Song
+                    btn_new = Button(root, text = "New Song",
+                        fg = btn_color, command=music_play, bg=btn_background, height=1, width=11, font=buttonFont, cursor=set_cursor)
+                    btn_new.grid(column=2, row=1)
+
+                    # Close - this is so errors arent throw. use this instead of the X in Windows
+                    btn_new = Button(root, text = "Close",
+                        fg = "red3", command=root.destroy, bg=btn_background, height=1, width=11, font=buttonFont, cursor=set_cursor)
+                    btn_new.grid(column=2, row=2)
+
+                    # Volume 
+                    label_font = font.Font(family="Comic Sans MS", size=19)
+                    vol_lab = tk.Label(master=root, text="Volume", bg=background_color,font=label_font,fg = "green2")
+                    vol_lab.grid(column=0, row=5)
+
+                    vol_scale = Scale(orient=HORIZONTAL,bg="gray60", length=135, width=15, sliderlength=10, from_=0, to=10, tickinterval=1)
+                    vol_scale.grid(column=0, row=6)
+                    
+
+                dark_mode()
+                root.mainloop()
+        except:
+            cc()
+            settings_menu()
 
     def ingame_menu(replay_game):
         print()
@@ -823,7 +851,7 @@ try:                # there is an error so you can read it
         print("2: Toggle debugging mode")
         print("3: View Credits")
         print("4: Open Document explaining this game")
-        print("5: Music but in a bad gooey (not a thing yet)")
+        print("5: Music but in a bad gooey (very broken)")
         print()
         print("6: Go back to main menu")
         print("7: Quit Game")
