@@ -600,7 +600,8 @@ try:                # there is an error so you can read it
         words = ["apple", "computer", "nature", "forest", "music", "china",
         "eat the rich", "sadness", "happy", "puppies", "cookie", "python", "keyboard",
         "holiday", "chicken", "display", "jeff bezos", "tax fraud", "engine", "science"
-        "piano", "software"]
+        "piano", "software", "technology", "color", "ignorant", "american"] 
+        # "Those last two words have zero correlation" -An American, 2021
 
         chosen_word = random.choice(words)          # random word list
 
@@ -1007,6 +1008,84 @@ try:                # there is an error so you can read it
         time.sleep(1.5) # waits for sound to be done
         sys.exit()
 
+
+    def main_menu_gui():
+        cc()
+        print("Close GUI to continue...")
+        try:    # throws errors under the rug so the rest of the code can continue.
+            root_mg = Tk()
+
+            while True:
+                # options
+                buttonFont = font.Font(family="Comic Sans MS", size=15) # button text properties
+                set_cursor = "heart"    # trek
+                btn_color = "green"
+                btn_background = "gray60"
+                background_color = "gray15"
+
+                
+                # window setup
+                root_mg.title("peak ui design")
+                root_mg.geometry("400x500")
+                root_mg["bg"] = "gray15"   # keep this idk what it does
+
+                
+                label_font = font.Font(family="Comic Sans MS", size=15)
+                label1 = tk.Label(master=root_mg, text="Pick an Option:", bg=background_color,font=label_font,fg = "green2")
+                label1.grid(column=0, row=0)
+
+
+                # for light mode just change colors in the vars and reload the window
+
+
+                '''
+                for light mode just change colors in the vars and reload the window
+                # old menu code from a different project. thats why its janky. I don't wanna delete it for reasons
+                def how_to_play():|
+                    print("seriously?!?!")
+                    how_toPlay_msgbox = messagebox.askquestion("RPS Help", "Are you serious?!?!")
+                    if how_toPlay_msgbox == "yes":
+                        sys.exit()
+                    elif how_toPlay_msgbox == "no":
+                        print("Good.")
+
+                def flashbang():
+                    print("hello")
+                    new= Toplevel()
+                    new.geometry("7680x4320") # 8K because why not. but by doing this the whole screen is flled with white
+                    new.title("I did warn you")
+                    # Create a Label in New window
+                    Label(new, text="Get flashbanged lol", font=("Tahoma 17 bold")).pack(pady=30)
+                '''
+
+
+                def gui_main_menu():  #regular buttons. will go to light_mode if light mode is enabled in the options menu
+
+                    # Close
+                    btn_new = Button(root_mg, text = "Close",
+                        fg = "red3", command=root_mg.destroy, bg=btn_background, height=1, width=11, font=buttonFont, cursor=set_cursor)
+                    btn_new.grid(column=0, row=0)
+
+                    # Toggle
+                    btn_tog = Button(root_mg, text = "Test", # this is kind of redundant because of the slider but ehhhhh
+                        fg = "green", command=toggle_music_gui, bg=btn_background, height=1, width=11, font=buttonFont, cursor=set_cursor)
+                    btn_tog.grid(column=0, row=1)
+
+
+                    # New Song
+                    btn_new = Button(root_mg, text = "Hi",
+                        fg = btn_color, command=music_play, bg=btn_background, height=1, width=11, font=buttonFont, cursor=set_cursor)
+                    btn_new.grid(column=0, row=2)
+
+
+
+
+
+                gui_main_menu()
+                root_mg.mainloop()
+        except:
+            cc()
+            main_menu()
 
     def main_menu():    # also contains easter egg code
         print("Arcade for IFT101 by Carter, R-Bay, and Brandon")
