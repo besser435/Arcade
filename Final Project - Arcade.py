@@ -6,19 +6,18 @@
 def main_notes():   # to collapse the text below in the IDE
     '''
     Arcade for IFT101 final project    
-    11-22-21                                      
+    11-25-21                                      
     Written by Brandon, Carter, and R-Bay
-    v1.4 beta 2
-    * GUI added but not implimented 
-    
+    v1.4 beta 3
     https://github.com/besser435/Arcade.py
 
 
     This document has some important things to note:
     https://docs.google.com/document/d/1z0a9XA7nS2HSgqRiNl7OAoM2NchoCG0EkOCNeLv4DfM/edit?usp=sharing
 
-    linux_mode disables a few things so this can run on there                  
-
+    linux_mode disables a few things so this can run on there.
+    The GUI stuff might not work regardless
+    
     We are aware that this is a royal mess.
     In the future we hope to do better.
 
@@ -28,8 +27,8 @@ def main_notes():   # to collapse the text below in the IDE
     A batch file is included if you dont have them or are too
     lazy to copy and pase the stuff below
     '''
-# SPAGHETTI CODE STATUS: ITALIAN
-# HOURS WASTED ON DEBUGGING AND USELESS FEATURES SO FAR: 369
+    # SPAGHETTI CODE STATUS: ITALIAN
+    # HOURS WASTED ON DEBUGGING AND USELESS FEATURES SO FAR: 437
 
 
 from os import read
@@ -54,7 +53,7 @@ try:                # there is an error so you can read it
     # AAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
 
     # options
-    enable_music = 0
+    enable_music = 1
     rickroll = 1
     global_cut_music = 0            # see message below
     game_count = 5                  # used for some stuff (5 currently)
@@ -137,32 +136,35 @@ try:                # there is an error so you can read it
             print(Fore.RED + "music_logic error")    
     music_logic()
 
-    def toggle_music_gui():
-        global enable_music
-        global rickroll
-        if not enable_music:
-            enable_music = 1
-            cc()
-            if global_cut_music == False: print("Music On")
-            music_play()
-            #settings_menu() BUG causes runtime error
-
-        else:
-            cc()
-            enable_music = 0
-            if global_cut_music == False: print("Music Off")
-            pygame.mixer.music.fadeout(750)
-            rickroll = 0
-
 
     def gui_music():
+        def toggle_music_gui():
+            global enable_music
+            global rickroll
+            if not enable_music:
+                enable_music = 1
+                cc()
+                if global_cut_music == False: print("Music On")
+                music_play()
+
+                size = len(rand_song)   # this only works sometimes for some reason
+                mod_string = rand_song[:size - 4] # removes file extension
+                print("Now playing: " + Fore.LIGHTMAGENTA_EX + mod_string)
+
+                #settings_menu() BUG causes runtime error
+
+            else:
+                cc()
+                enable_music = 0
+                if global_cut_music == False: print("Music Off")
+                pygame.mixer.music.fadeout(750)
+                rickroll = 0
+
+
         cc()
-        print("Close GUI to continue...")
+        print("Close GUI to continue...")   # cant do anything else while its open
         try:    # throws errors unde the rug so the rest of the code can continue.
             root = Tk()
-            def debug():
-                print("debug")
-
             while True:
                 # options
                 buttonFont = font.Font(family="Comic Sans MS", size=15) # button text properties
@@ -232,6 +234,7 @@ try:                # there is an error so you can read it
         except:
             cc()
             settings_menu()
+
 
     def ingame_menu(replay_game):
         print()
@@ -1009,12 +1012,18 @@ try:                # there is an error so you can read it
         sys.exit()
 
 
-    def main_menu_gui():
+    def main_menu_gui():    # souldnt even be a thing, tkinter is so old and broken...
         cc()
-        print("Close GUI to continue...")
-        try:    # throws errors under the rug so the rest of the code can continue.
-            root_mg = Tk()
+        print("300 GW time")
+        time.sleep(1)
+        print("Reactor #4 style")
+        time.sleep(1)
+        print("(errors incoming)")
+        time.sleep(1)
+        input("Hit enter to continue...")
 
+        try:    # throws errors under the rug so the rest of the code can "continue"
+            root_mg = Tk()
             while True:
                 # options
                 buttonFont = font.Font(family="Comic Sans MS", size=15) # button text properties
@@ -1023,69 +1032,70 @@ try:                # there is an error so you can read it
                 btn_background = "gray60"
                 background_color = "gray15"
 
-                
                 # window setup
                 root_mg.title("peak ui design")
                 root_mg.geometry("400x500")
                 root_mg["bg"] = "gray15"   # keep this idk what it does
 
-                
-                label_font = font.Font(family="Comic Sans MS", size=15)
+
+                def return_cli_menu():
+                    cc()
+                    root_mg.destroy
+                    main_menu()
+
+                def goodbye_gui():  # doesnt even work
+                    root_mg.destroy
+                    goodbye()
+                    
+                label_font = font.Font(family="Comic Sans MS", size=20)
                 label1 = tk.Label(master=root_mg, text="Pick an Option:", bg=background_color,font=label_font,fg = "green2")
                 label1.grid(column=0, row=0)
 
-
-                # for light mode just change colors in the vars and reload the window
-
-
-                '''
-                for light mode just change colors in the vars and reload the window
-                # old menu code from a different project. thats why its janky. I don't wanna delete it for reasons
-                def how_to_play():|
-                    print("seriously?!?!")
-                    how_toPlay_msgbox = messagebox.askquestion("RPS Help", "Are you serious?!?!")
-                    if how_toPlay_msgbox == "yes":
-                        sys.exit()
-                    elif how_toPlay_msgbox == "no":
-                        print("Good.")
-
-                def flashbang():
-                    print("hello")
-                    new= Toplevel()
-                    new.geometry("7680x4320") # 8K because why not. but by doing this the whole screen is flled with white
-                    new.title("I did warn you")
-                    # Create a Label in New window
-                    Label(new, text="Get flashbanged lol", font=("Tahoma 17 bold")).pack(pady=30)
-                '''
-
-
-                def gui_main_menu():  #regular buttons. will go to light_mode if light mode is enabled in the options menu
-
-                    # Close
-                    btn_new = Button(root_mg, text = "Close",
-                        fg = "red3", command=root_mg.destroy, bg=btn_background, height=1, width=11, font=buttonFont, cursor=set_cursor)
-                    btn_new.grid(column=0, row=0)
-
-                    # Toggle
-                    btn_tog = Button(root_mg, text = "Test", # this is kind of redundant because of the slider but ehhhhh
-                        fg = "green", command=toggle_music_gui, bg=btn_background, height=1, width=11, font=buttonFont, cursor=set_cursor)
+                def gui_main_menu():  # regular buttons. will go to light_mode if light mode is enabled in the options menu
+                    # FB
+                    btn_tog = Button(root_mg, text = "Return to CLI Menu", # this is kind of redundant because of the slider but ehhhhh
+                        fg = "blue4", command=return_cli_menu, bg=btn_background, height=1, width=15, font=buttonFont, cursor=set_cursor)
                     btn_tog.grid(column=0, row=1)
-
-
-                    # New Song
-                    btn_new = Button(root_mg, text = "Hi",
-                        fg = btn_color, command=music_play, bg=btn_background, height=1, width=11, font=buttonFont, cursor=set_cursor)
-                    btn_new.grid(column=0, row=2)
-
-
-
-
+                    # RPS
+                    btn_tog = Button(root_mg, text = "Rock Paper Scissors", # this is kind of redundant because of the slider but ehhhhh
+                        fg = "green", command=rps, bg=btn_background, height=1, width=15, font=buttonFont, cursor=set_cursor)
+                    btn_tog.grid(column=0, row=2)
+                    # BF
+                    btn_tog = Button(root_mg, text = "Bottle Flip", # this is kind of redundant because of the slider but ehhhhh
+                        fg = "green", command=bottle_flip, bg=btn_background, height=1, width=15, font=buttonFont, cursor=set_cursor)
+                    btn_tog.grid(column=0, row=3)
+                    # Hangman
+                    btn_tog = Button(root_mg, text = "Hangman", # this is kind of redundant because of the slider but ehhhhh
+                        fg = "green", command=hangman, bg=btn_background, height=1, width=15, font=buttonFont, cursor=set_cursor)
+                    btn_tog.grid(column=0, row=4)
+                    # RTT
+                    btn_tog = Button(root_mg, text = "Reaction Time Test", # this is kind of redundant because of the slider but ehhhhh
+                        fg = "green", command=reaction_time_test, bg=btn_background, height=1, width=15, font=buttonFont, cursor=set_cursor)
+                    btn_tog.grid(column=0, row=5)
+                    # Dice
+                    btn_tog = Button(root_mg, text = "Dice", # this is kind of redundant because of the slider but ehhhhh
+                        fg = "green", command=dice, bg=btn_background, height=1, width=15, font=buttonFont, cursor=set_cursor)
+                    btn_tog.grid(column=0, row=6)
+                    # NFTs
+                    btn_tog = Button(root_mg, text = "Free images", # this is kind of redundant because of the slider but ehhhhh
+                        fg = "green", command=nft, bg=btn_background, height=1, width=15, font=buttonFont, cursor=set_cursor)
+                    btn_tog.grid(column=0, row=7)
+                    # Settings
+                    btn_tog = Button(root_mg, text = "Settings", # this is kind of redundant because of the slider but ehhhhh
+                        fg = "blue4", command=settings_menu, bg=btn_background, height=1, width=15, font=buttonFont, cursor=set_cursor)
+                    btn_tog.grid(column=0, row=8)
+                    # Quit
+                    btn_tog = Button(root_mg, text = "Quit", # this is kind of redundant because of the slider but ehhhhh
+                        fg = "red4", command=goodbye_gui, bg=btn_background, height=1, width=15, font=buttonFont, cursor=set_cursor)
+                    btn_tog.grid(column=0, row=15)
+                    root_mg.destroy
 
                 gui_main_menu()
                 root_mg.mainloop()
         except:
             cc()
             main_menu()
+
 
     def main_menu():    # also contains easter egg code
         print("Arcade for IFT101 by Carter, R-Bay, and Brandon")
@@ -1118,6 +1128,7 @@ try:                # there is an error so you can read it
         print()
         print("7: Settings")
         print("8: Quit Game")
+        print("X: To throw more errors than Reactor #4  ")  # Thank you to my friend Joseph for this FLAWLESS message
 
         which_game = input("What would you like to do? ")
 
@@ -1169,7 +1180,7 @@ try:                # there is an error so you can read it
             music_logic()
             main_menu()
         elif "x" in which_game and rickroll == True:
-            gui_music()
+            main_menu_gui()
         else:
             cc()
             print(Fore.RED + "Invalid input")
