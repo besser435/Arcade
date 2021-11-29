@@ -7,9 +7,9 @@
 def main_notes():   # to collapse the text below in the IDE
     '''
     Arcade for IFT101 final project    
-    11-25-21                                      
+    11-29-21                                      
     Written by Brandon, Carter, and R-Bay
-    v1.4
+    v1.5 beta 1
     https://github.com/besser435/Arcade.py
 
 
@@ -1063,16 +1063,27 @@ try:                # there is an error so you can read it
         sys.exit()
 
 
+    def notes():
+        webbrowser.open("https://docs.google.com/document/d/1z0a9XA7nS2HSgqRiNl7OAoM2NchoCG0EkOCNeLv4DfM/edit?usp=sharing", autoraise=True)
+
+
     def main_menu_gui():    # shouldnt even be a thing, tkinter is so old and broken...
-        cc()
-        print("300 GW time")
-        time.sleep(1)
-        print("Reactor #4 style")
-        time.sleep(1)
-        print("(errors incoming)")
-        time.sleep(1)
-        input("Hit enter to continue...")
-        print("Menu GUI opened in new window")
+        if enable_debug_flags_main == False:
+            cc()
+            print("300 GW time")
+            time.sleep(1)
+            print("Reactor #4 style")
+            time.sleep(1)
+            print("(errors incoming)")
+            time.sleep(1)
+            input("Hit enter to continue...")
+            print("Menu GUI opened in new window")
+        else:
+            cc()
+            print("300 GW time")
+            print("Reactor #4 style")
+            print("(errors incoming)")
+            print("Menu GUI opened in new window")
 
         try:    # throws errors under the rug so the rest of the code can "continue"
             root_mg = Tk()
@@ -1089,15 +1100,13 @@ try:                # there is an error so you can read it
                 root_mg.geometry("400x500")
                 root_mg["bg"] = "gray15"   # keep this idk what it does
 
-                def notes():
-                    webbrowser.open("https://docs.google.com/document/d/1z0a9XA7nS2HSgqRiNl7OAoM2NchoCG0EkOCNeLv4DfM/edit?usp=sharing", autoraise=True)
 
-                def return_cli_menu():
+                def return_cli_menu():  # doesnt even work
                     cc()
                     root_mg.destroy
                     main_menu()
 
-                def goodbye_gui():  # doesnt even work
+                def goodbye_gui():  # also doesnt even work
                     root_mg.destroy
                     goodbye()
                     
@@ -1144,10 +1153,9 @@ try:                # there is an error so you can read it
                     btn_tog.grid(column=0, row=15)
                     root_mg.destroy
                 
-                '''
+
                 # old menu code from a different project. thats why its janky and doesnt match stuff. I don't wanna delete it for reasons
                 def how_to_play():
-                    print("seriously?!?!")
                     how_toPlay_msgbox = messagebox.askquestion("RPS Help", "Are you serious?!?!")
                     if how_toPlay_msgbox == "yes":
                         sys.exit()
@@ -1159,9 +1167,9 @@ try:                # there is an error so you can read it
                     new= Toplevel()
                     new.geometry("7680x4320") # 8K because why not. but by doing this the whole screen is flled with white
                     new.title("I did warn you")
-                    #Create a Label in New window
+                    # Create a Label in New window
                     Label(new, text="Get flashbanged lol", font=("Tahoma 17 bold")).pack(pady=30)
-                    # menu options
+
 
                 # top menu bar
                 menu = Menu(root_mg)
@@ -1173,13 +1181,11 @@ try:                # there is an error so you can read it
                 optionmenu.add_command(label="Light Mode (Seriously don't click this)", command=flashbang)
                 #optionmenu.add_command(label="Other Light Mode", command=gui_main_menu)
 
-
                 helpmenu = Menu(menu)
                 helpmenu = Menu(menu, tearoff = 0)
                 menu.add_cascade(label="Help", menu=helpmenu)
                 helpmenu.add_command(label="How to Play", command=how_to_play)
                 helpmenu.add_command(label="About", command=notes)
-                '''
     
                 gui_main_menu()
                 root_mg.mainloop()
@@ -1219,8 +1225,9 @@ try:                # there is an error so you can read it
         print("7: Inator Inator!")   # doof
         print()
         print("s: Settings")
+        print("n: Notes about this program")
+        print("x: Throw more errors than Reactor #4")  # Thank you to my friend Joseph for this FLAWLESS message
         print("q: Quit Game")
-        print("x: To throw more errors than Reactor #4  ")  # Thank you to my friend Joseph for this FLAWLESS message
 
         which_game = input("What would you like to do? ")
 
@@ -1271,11 +1278,14 @@ try:                # there is an error so you can read it
             main_menu()
         elif "x" in which_game:
             main_menu_gui()
+        elif "n" in which_game:
+            notes()
         else:
             cc()
             print(Fore.RED + "Invalid input")
             main_menu()
     main_menu()
+
 
 except Exception:
     print(traceback.format_exc())
