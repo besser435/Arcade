@@ -60,7 +60,7 @@ try:                # there is an error so you can read it
     rickroll = 1
     global_cut_music = 0            # see message below
     game_count = 6                  # used for some stuff (5 currently)
-    enable_debug_flags_main = 1     # its sad that this is even a thing
+    enable_debug_flags_main = 0     # its sad that this is even a thing
     linux_mode = 0                  # only tested on Ubuntu, it works there
     music_vol = 0.7
 
@@ -187,25 +187,6 @@ try:                # there is an error so you can read it
                 label1 = tk.Label(master=root, text="Music Options", bg=background_color,font=label_font,fg = "green2")
                 label1.grid(column=0, row=0)
 
-                '''
-                # old menu code from a different project. thats why its janky. I don't wanna delete it for reasons
-                def how_to_play():|
-                    print("seriously?!?!")
-                    how_toPlay_msgbox = messagebox.askquestion("RPS Help", "Are you serious?!?!")
-                    if how_toPlay_msgbox == "yes":
-                        sys.exit()
-                    elif how_toPlay_msgbox == "no":
-                        print("Good.")
-
-                def flashbang():
-                    print("hello")
-                    new= Toplevel()
-                    new.geometry("7680x4320") # 8K because why not. but by doing this the whole screen is flled with white
-                    new.title("I did warn you")
-                    #Create a Label in New window
-                    Label(new, text="Get flashbanged lol", font=("Tahoma 17 bold")).pack(pady=30)
-                '''
-
 
                 def dark_mode():  #regular buttons. will go to light_mode if light mode is enabled in the options menu
                     # Toggle
@@ -218,7 +199,7 @@ try:                # there is an error so you can read it
                         fg = btn_color, command=music_play, bg=btn_background, height=1, width=11, font=buttonFont, cursor=set_cursor)
                     btn_new.grid(column=2, row=1)
 
-                    # Close - this is so errors arent throw. use this instead of the X in Windows
+                    # Close - this is so errors arent thrown. use this instead of the X in Windows
                     btn_new = Button(root, text = "Close",
                         fg = "red3", command=root.destroy, bg=btn_background, height=1, width=11, font=buttonFont, cursor=set_cursor)
                     btn_new.grid(column=2, row=2)
@@ -910,7 +891,7 @@ try:                # there is an error so you can read it
         # The best inator in my opinoin: https://www.youtube.com/watch?v=n4TNdWxMX1Q
         global e_egg
         e_egg += 1
-        
+
         print("The Inator-Inator!")
         print()
 
@@ -1108,6 +1089,8 @@ try:                # there is an error so you can read it
                 root_mg.geometry("400x500")
                 root_mg["bg"] = "gray15"   # keep this idk what it does
 
+                def notes():
+                    webbrowser.open("https://docs.google.com/document/d/1z0a9XA7nS2HSgqRiNl7OAoM2NchoCG0EkOCNeLv4DfM/edit?usp=sharing", autoraise=True)
 
                 def return_cli_menu():
                     cc()
@@ -1160,7 +1143,44 @@ try:                # there is an error so you can read it
                         fg = "red4", command=goodbye_gui, bg=btn_background, height=1, width=15, font=buttonFont, cursor=set_cursor)
                     btn_tog.grid(column=0, row=15)
                     root_mg.destroy
+                
+                '''
+                # old menu code from a different project. thats why its janky and doesnt match stuff. I don't wanna delete it for reasons
+                def how_to_play():
+                    print("seriously?!?!")
+                    how_toPlay_msgbox = messagebox.askquestion("RPS Help", "Are you serious?!?!")
+                    if how_toPlay_msgbox == "yes":
+                        sys.exit()
+                    elif how_toPlay_msgbox == "no":
+                        print("Good.")
 
+                def flashbang():
+                    print("hello")
+                    new= Toplevel()
+                    new.geometry("7680x4320") # 8K because why not. but by doing this the whole screen is flled with white
+                    new.title("I did warn you")
+                    #Create a Label in New window
+                    Label(new, text="Get flashbanged lol", font=("Tahoma 17 bold")).pack(pady=30)
+                    # menu options
+
+                # top menu bar
+                menu = Menu(root_mg)
+                root_mg.config(menu=menu)
+
+                optionmenu = Menu(menu)
+                optionmenu = Menu(menu, tearoff = 0)
+                menu.add_cascade(label="Options", menu=optionmenu)
+                optionmenu.add_command(label="Light Mode (Seriously don't click this)", command=flashbang)
+                #optionmenu.add_command(label="Other Light Mode", command=gui_main_menu)
+
+
+                helpmenu = Menu(menu)
+                helpmenu = Menu(menu, tearoff = 0)
+                menu.add_cascade(label="Help", menu=helpmenu)
+                helpmenu.add_command(label="How to Play", command=how_to_play)
+                helpmenu.add_command(label="About", command=notes)
+                '''
+    
                 gui_main_menu()
                 root_mg.mainloop()
         except:
