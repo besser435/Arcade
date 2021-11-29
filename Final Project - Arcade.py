@@ -2,14 +2,14 @@
 
 # If it's worth doing, it's worth overdoing.
 # Thats why this is so long and painful
-
+    
 
 def main_notes():   # to collapse the text below in the IDE
-    '''
-    Arcade for IFT101 final project    
-    11-29-21                                      
+    """
+    Arcade for IFT101 final project
+    11-29-21
     Written by Brandon, Carter, and R-Bay
-    v1.5 beta 1
+    v1.5-beta1.1
     https://github.com/besser435/Arcade.py
 
 
@@ -17,9 +17,10 @@ def main_notes():   # to collapse the text below in the IDE
     https://docs.google.com/document/d/1z0a9XA7nS2HSgqRiNl7OAoM2NchoCG0EkOCNeLv4DfM/edit?usp=sharing
 
     linux_mode disables a few things so this can run on there.
+    Hasn't been tested or implimented for a while, this might not run on linux anymore
     The GUI stuff might not work regardless
     Who am I kidding it doesnt work at all
-    
+
     We are aware that this is a royal mess.
     In the future we hope to do better.
 
@@ -27,10 +28,10 @@ def main_notes():   # to collapse the text below in the IDE
 
     This game requires a few libraries, they can be found below.
     A batch file is included if you dont have them or are too
-    lazy to copy and pase the stuff below
-    '''
+    lazy to copy and paste the stuff below
+    """
     # SPAGHETTI CODE STATUS: ITALIAN
-    # HOURS WASTED ON DEBUGGING AND USELESS FEATURES SO FAR: 437
+    # HOURS WASTED ON DEBUGGING AND USELESS FEATURES SO FAR: 504
 
 
 from os import read
@@ -59,19 +60,19 @@ try:                # there is an error so you can read it
     enable_music = 1
     rickroll = 1
     global_cut_music = 0            # see message below
-    game_count = 6                  # used for some stuff (5 currently)
+    game_count = 7                  # used for e_egg
     enable_debug_flags_main = 0     # its sad that this is even a thing
     linux_mode = 0                  # only tested on Ubuntu, it works there
     music_vol = 0.7
 
-    '''
+    """
     Enable this option if you don't have the music files, or are getting
     errors related to it. This option basically disables anything 
     relating to music so you can run the game without it.
 
     However the music does "improve" the experience
     The music is in the same zip file as this .py file
-    '''
+    """
 
     # storage
     e_egg = 0
@@ -109,9 +110,11 @@ try:                # there is an error so you can read it
         try:    # music stuff can be prone to errors, so thats why it is special and gets its own thing
             global current_song
             global rand_song
+            global music_vol
             songs = ["Climate Nuclear.mp3", "The Egg.mp3", "Nuclear Death Toll.mp3"]
             rand_song = random.choice(songs)
             pygame.mixer.music.set_volume(music_vol)
+            print(music_vol)
             
             if enable_music == True:
                 if global_cut_music == False:     # its in music_logic, but still needed. sometimes logic is skipped
@@ -140,7 +143,7 @@ try:                # there is an error so you can read it
     music_logic()
 
 
-    def gui_music():
+    def gui_music():    # new pygame_menu is in the works! pog no more errors
         def toggle_music_gui():
             global enable_music
             global rickroll
@@ -166,7 +169,7 @@ try:                # there is an error so you can read it
 
         cc()
         print("Close GUI to continue...")   # cant do anything else while its open
-        try:    # throws errors unde the rug so the rest of the code can continue.
+        try:    # throws errors under the rug so the rest of the code can continue.
             root = Tk()
             while True:
                 # options
@@ -204,14 +207,23 @@ try:                # there is an error so you can read it
                         fg = "red3", command=root.destroy, bg=btn_background, height=1, width=11, font=buttonFont, cursor=set_cursor)
                     btn_new.grid(column=2, row=2)
 
+
                     # Volume 
+                    def update_vol(vol):
+                        global music_vol
+                        print(vol)
+                        music_vol = vol
+                        
+
                     label_font = font.Font(family="Comic Sans MS", size=19)
                     vol_lab = tk.Label(master=root, text="Volume", bg=background_color,font=label_font,fg = "green2")
                     vol_lab.grid(column=0, row=5)
 
-                    vol_scale = Scale(orient=HORIZONTAL,bg="gray60", length=135, width=15, sliderlength=10, from_=0, to=10, tickinterval=1)
+                    vol_scale = Scale(orient=HORIZONTAL,bg="gray60", length=135, width=15, sliderlength=10, from_=0, to=1, resolution=0.1,
+                    tickinterval=0.1, command=update_vol)
+                    vol_scale.set(0.7)
                     vol_scale.grid(column=0, row=6)
-                    
+                 
 
                 dark_mode()
                 root.mainloop()
@@ -320,9 +332,9 @@ try:                # there is an error so you can read it
 
 
         class match_fixing:
-        # added this feature just to practice. in reality its useless and a waste of time      
-        # enable_rig = computer leans towards rock
-        # enable_super_rig = computer always wins  
+            # added this feature just to practice. in reality its useless and a waste of time
+            # enable_rig = computer leans towards rock
+            # enable_super_rig = computer always wins
         
             if skip_rig_ask == True:
                 if enable_debug_flags_main == 1: print(Fore.YELLOW + "                          skip_rig_ask = " + str(skip_rig_ask))
@@ -699,7 +711,7 @@ try:                # there is an error so you can read it
                 alert = (Fore.RED + Back.WHITE + "⠀⠀⠀⠀⠀HIT ENTER⠀⠀⠀⠀⠀" + Fore.RESET + Back.RESET)
                 if linux_mode == True: print("You can cheat now lol")
                 for i in range(5):  # num = how many times to test
-                    varied_delay = random.randint(1,5)
+                    varied_delay = random.randint(1, 5)
                     time.sleep(varied_delay)
 
                     if linux_mode == False:
@@ -888,7 +900,7 @@ try:                # there is an error so you can read it
         # You need to have watched Phineas and Ferb to understand this
         # Pretty much everyone in my generation will understand and appreciate it
         # If you don't know what I'm talking about, here is this: https://bit.ly/3ldUkDa
-        # The best inator in my opinoin: https://www.youtube.com/watch?v=n4TNdWxMX1Q
+        # The best inator in my opinion: https://www.youtube.com/watch?v=n4TNdWxMX1Q
         global e_egg
         e_egg += 1
 
@@ -925,7 +937,6 @@ try:                # there is an error so you can read it
         print("Arcade made by:")
         time.sleep(1)
         print()
-
 
         tprint("Brandon", "sub-zero")
         time.sleep(0.5)
@@ -1046,7 +1057,7 @@ try:                # there is an error so you can read it
                 pygame.mixer.music.load("GBsound.mp3")
                 pygame.mixer.music.play()
         # help
-        sys.stdout.write(Fore.RED +"G")
+        sys.stdout.write(Fore.RED + "G")
         time.sleep(bye_delay)
         sys.stdout.write(Fore.YELLOW + "o")
         time.sleep(bye_delay)
@@ -1067,7 +1078,7 @@ try:                # there is an error so you can read it
         webbrowser.open("https://docs.google.com/document/d/1z0a9XA7nS2HSgqRiNl7OAoM2NchoCG0EkOCNeLv4DfM/edit?usp=sharing", autoraise=True)
 
 
-    def main_menu_gui():    # shouldnt even be a thing, tkinter is so old and broken...
+    def main_menu_gui():    # shouldn't even be a thing, tkinter is so old and broken...
         if enable_debug_flags_main == False:
             cc()
             print("300 GW time")
@@ -1269,7 +1280,7 @@ try:                # there is an error so you can read it
                 cc()
                 webbrowser.open("https://imgur.com/a/mYYsmRu", autoraise=False) # why
                 main_menu()
-        elif  "q" in which_game:
+        elif "q" in which_game:
             goodbye()
         elif "r" in which_game and rickroll == True:
             cc()
