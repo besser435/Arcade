@@ -1,6 +1,7 @@
 
 
-# If it's worth doing, it's worth overdoing. 
+# If it's worth doing, it's worth overdoing.
+# Thats why this is so long and painful
 
 
 def main_notes():   # to collapse the text below in the IDE
@@ -8,7 +9,7 @@ def main_notes():   # to collapse the text below in the IDE
     Arcade for IFT101 final project    
     11-25-21                                      
     Written by Brandon, Carter, and R-Bay
-    v1.4 beta 3
+    v1.4
     https://github.com/besser435/Arcade.py
 
 
@@ -17,6 +18,7 @@ def main_notes():   # to collapse the text below in the IDE
 
     linux_mode disables a few things so this can run on there.
     The GUI stuff might not work regardless
+    Who am I kidding it doesnt work at all
     
     We are aware that this is a royal mess.
     In the future we hope to do better.
@@ -35,6 +37,7 @@ from os import read
 import traceback    # prevents the terminal from closing if
 try:                # there is an error so you can read it
 
+
     import webbrowser, keyboard, random, pygame, time, sys, PIL, os
     from colorama import init                   # pip install colorama
     init()
@@ -50,14 +53,14 @@ try:                # there is an error so you can read it
     from tkinter import messagebox
     import tkinter.font as font
     import tkinter as tk
-    # AAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+
 
     # options
     enable_music = 1
     rickroll = 1
     global_cut_music = 0            # see message below
-    game_count = 5                  # used for some stuff (5 currently)
-    enable_debug_flags_main = 0     # its sad that this is even a thing
+    game_count = 6                  # used for some stuff (5 currently)
+    enable_debug_flags_main = 1     # its sad that this is even a thing
     linux_mode = 0                  # only tested on Ubuntu, it works there
     music_vol = 0.7
 
@@ -96,8 +99,8 @@ try:                # there is an error so you can read it
         print(Fore.YELLOW + "          Debugging mode: " + str(enable_debug_flags_main))
         print(Fore.YELLOW + "          e_egg progress: " + str(e_egg))
         print()
+        print(Fore.YELLOW + "          Music nuke: " + str(global_cut_music))        
         print(Fore.YELLOW + "          Enable music: " + str(enable_music))
-        print(Fore.YELLOW + "          Music nuke: " + str(global_cut_music))
         print(Fore.YELLOW + "          Rick Roll: " + str(rickroll))
         print(Fore.YELLOW + "          CWD: " + os.getcwd())
 
@@ -252,6 +255,8 @@ try:                # there is an error so you can read it
         elif "menu" in ask_menu:
             cc()
             main_menu()
+        elif "q" in ask_menu:
+            goodbye()
         else:
             quit = input("Are you sure? y/n ")
             if quit == "y":
@@ -289,12 +294,13 @@ try:                # there is an error so you can read it
         # storage
         player_score = 0
         comp_score = 0
-        enable_rig = 0          # this is redundant since you can just read the input,
-        player_history = []     # but this way you can do certain things with it
+        enable_rig = 0
+        enable_super_rig = 0          
+        player_history = []     
         comp_history = []
 
 
-        print(Fore.BLUE + Back.YELLOW + "Rock Paper Scissors by Brandon, Carter, and R-Bay | V1.6-IFT101 | November 2021")
+        print(Fore.BLUE + Back.YELLOW + "Rock Paper Scissors by Brandon, Carter, and R-Bay | V1.7-IFT101 | November 2021")
         print("First to " + str(match_point) + " points wins!")
 
 
@@ -333,20 +339,34 @@ try:                # there is an error so you can read it
 
 
         class match_fixing:
-            # added this feature just to practice. in reality its useless and a waste of time
+        # added this feature just to practice. in reality its useless and a waste of time      
+        # enable_rig = computer leans towards rock
+        # enable_super_rig = computer always wins  
+        
             if skip_rig_ask == True:
                 if enable_debug_flags_main == 1: print(Fore.YELLOW + "                          skip_rig_ask = " + str(skip_rig_ask))
             else:
                 nonlocal enable_rig   # took me 20 minutes to figure out where this needed to go haha
-                ask_for_rig = input("would you like to rig the game? y/n ")
+                nonlocal enable_super_rig
+                
+                ask_for_rig = input("Would you like to rig the game? y/n ")
+
                 if ask_for_rig == "y":
-                    enable_rig = True
-                    print("Game is rigged: " + str(enable_rig))
-                    Operation_Asteroid2()
+                    ask_for_super_rig = input("Would you like to super rig the game? y/n ")
+                    if ask_for_super_rig == "menu":
+                        ingame_menu(rps)
+
+                    if "y" in ask_for_super_rig:
+                    
+                        enable_super_rig = True
+                        print("Game is rigged: rig = " + str(enable_rig) + " super rig = " + str(enable_super_rig))
+                        Operation_Asteroid2()
+                    else: 
+                        enable_rig = True
+                        print("Game is rigged: rig = " + str(enable_rig) + " super rig = " + str(enable_super_rig))
+                        Operation_Asteroid2()
                 elif "menu" in ask_for_rig:
                     ingame_menu(rps)
-                else:
-                    enable_rig = False
 
 
         def game():
@@ -356,30 +376,12 @@ try:                # there is an error so you can read it
 
                 # had issues with scopes earlier
                 if enable_debug_flags_main == 1: print(Fore.YELLOW + "Game is rigged in def game(): " + str(enable_rig))
-                
+                if enable_debug_flags_main == 1: print(Fore.YELLOW + "Game is super rigged in def game(): " + str(enable_super_rig))
+
+
                 class player_entry:
                     # User inputs their play here
                     print("Enter " + rolla + ", " + rollb + ", " + Fore.RESET + "or " + rollc)
-
-                class rng:
-                    if enable_rig == False:
-                        global comp_choice
-                        p_comp_play = ["rock", "paper", "scissors"]
-                        comp_choice = random.choice(p_comp_play)
-                        if enable_debug_flags_main == 1: print("                      rng normal")
-
-                    elif enable_rig == True:
-                        p_comp_play_rigged = ["rock", "rock", "rock", "paper", "scissors"]
-                        comp_choice = random.choice(p_comp_play_rigged)
-                        if enable_debug_flags_main == 1: print("                      rng rigged")
-
-
-                    if enable_debug_flags_main == True:
-                        print("                      comp_choice = " + comp_choice)
-                        if comp_choice == "rock": print("                      Roll Paper")
-                        if comp_choice == "paper": print("                      Roll Scissors")
-                        if comp_choice == "scissors": print("                      Roll Rock")
-
 
                     global player_input
                     player_input = input()
@@ -387,6 +389,31 @@ try:                # there is an error so you can read it
                     if "menu" in player_input:
                         ingame_menu(rps)
 
+                class rng:
+                    global comp_choice
+                    if enable_rig == True:
+                        p_comp_play_rigged = ["rock", "rock", "rock", "paper", "scissors"]
+                        comp_choice = random.choice(p_comp_play_rigged)
+                        if enable_debug_flags_main == 1: print(Fore.YELLOW + "                      rng rigged")
+
+                    elif enable_super_rig == True:
+                        if player_input == "rock":
+                            comp_choice = "paper"
+
+                        elif player_input == "paper":
+                            comp_choice = "scissors"
+                        
+                        elif player_input == "scissors":
+                            comp_choice = "rock"
+                        if enable_debug_flags_main == 1: print(Fore.YELLOW + "                      rng super rigged")
+
+                    else:
+                        p_comp_play = ["rock", "paper", "scissors"]
+                        comp_choice = random.choice(p_comp_play)
+                        if enable_debug_flags_main == 1: print(Fore.YELLOW + "                      rng normal")
+
+
+                    # adds to history
                     if player_input == "rock":
                         print("You chose " + rolla)
                         player_history.append(rolla)
@@ -424,10 +451,9 @@ try:                # there is an error so you can read it
 
 
                 class normal_logic:
-                    if enable_debug_flags_main == 1: print("                      def main_logic")
+                    if enable_debug_flags_main == 1: print(Fore.YELLOW + "                      def normal_logic")
                     nonlocal comp_score
                     nonlocal player_score
-
 
                     # outcome logic for player choosing rock
                     if player_input == "rock" and comp_choice == "paper":
@@ -548,24 +574,28 @@ try:                # there is an error so you can read it
                         time.sleep(delay)
                         print("==")
                         time.sleep(delay)
-                    flip_reg_outcome = (random.randint(0,4)) # 20% chance to land the flip
+                    flip_reg_outcome = (random.randint(0,4)) # chance to land the flip
+
 
                     for i in range(3):   # builds suspense
-                        print(".", end =" ")
                         time.sleep(delay)
+                        sys.stdout.write(".")
 
 
                     if flip_reg_outcome == 0:
                         time.sleep(suspense_delay)
                         print()
                         print("||")
+                        print("The bottle landed")
                         print("You win")
                         global e_egg
                         e_egg += 1
                         ingame_menu(bottle_flip)
                     else:
                         time.sleep(suspense_delay)
+                        print()
                         print("==")
+                        print("The bottle fell over")
                         print("You loose")
                         ingame_menu(bottle_flip)
 
@@ -818,6 +848,96 @@ try:                # there is an error so you can read it
                 ingame_menu(dice)                                           # sue Brandon. I added it, not my group partners.
 
 
+    def nft():
+        # not really an arcade game, this is just us taking shots at millennials 
+        capture_key = "s"
+        save_name = "ctrl+c.png"
+
+        cc()
+        cd()
+
+        def message():
+            print(Fore.LIGHTGREEN_EX + "Free image finder by R-Bay, Carter, and Brandon")
+            print()
+            print("This will get you a free image, for FREE!")
+            print("It is going to open an NFT website")
+            print("Once it loads and NFTs are visible, hit " + capture_key)
+            print("Step 4: Profit.")
+            print("???")
+            print()
+        message()
+
+
+        ready = input(Fore.RED + "Hit enter to continue " + Fore.RESET)
+        if "menu" in ready:
+            ingame_menu(nft)
+
+
+        webbrowser.open("https://opensea.io/assets", autoraise=True) # shows NFTs
+        print("Waiting for keypress (" +  Fore.YELLOW + capture_key + ")")
+
+
+        def screenshot():
+            image = ImageGrab.grab(bbox=())
+            image.save(save_name)    # just copies the NFTs lol
+
+            image = PIL.Image.open(save_name)
+            image.show()             # shows NFTs to you for FREE! You now own an image for FREE!
+
+
+        def end():
+            os.system("cls" if os.name == "nt" else "clear")
+            print("Congrats! You now own pixels that you didn't have to pay for!")
+            print("Image saved in: " + os.getcwd())
+
+
+        while True:     # thanks google
+            try:        # used try so that if user pressed other than the given key error will not be shown
+                if keyboard.is_pressed(capture_key):  
+                    screenshot()
+                    end()
+                    break 
+            except:
+                break   # if user pressed a key other than the given key the loop will break
+ 
+        ingame_menu(nft)
+
+
+    def inator():
+        # You need to have watched Phineas and Ferb to understand this
+        # Pretty much everyone in my generation will understand and appreciate it
+        # If you don't know what I'm talking about, here is this: https://bit.ly/3ldUkDa
+        # The best inator in my opinoin: https://www.youtube.com/watch?v=n4TNdWxMX1Q
+        global e_egg
+        e_egg += 1
+        
+        print("The Inator-Inator!")
+        print()
+
+        inatorify = input("What would you like to inatorify? ")
+
+        rand_msg = random.randint(0,5)
+
+        if "menu" in inatorify:
+            ingame_menu(inator)
+
+        if rand_msg == 0:
+            print("Perry, I present to you the...")
+            time.sleep(1)
+            print(inatorify.upper() + "-INATOR!!!")
+
+        elif rand_msg == 1:
+            print("This is the " + inatorify + "-inator!!!")
+
+        elif rand_msg == 2:
+            print("BEHOLD! THE " + inatorify.upper() + "-INATOR")
+
+        elif rand_msg == 3:
+            print("Perry the Platypus, this is my " + inatorify + "-inator!")
+
+        ingame_menu(inator)
+
+
     def game_credits():
         print("Thanks for playing!")
         time.sleep(1)
@@ -843,6 +963,11 @@ try:                # there is an error so you can read it
         tprint("R-bay")
         time.sleep(0.5)
         print("~(˘▾˘~)")
+
+        time.sleep(1.2)
+        print()
+        print("Special thanks to Joseph")
+        time.sleep(1.2)
         print()
         print("The faces don't display properly in the Windows terminal :(")
         print("Maybe use an IDE or a different thingamabob")
@@ -932,61 +1057,6 @@ try:                # there is an error so you can read it
     pls_ignore()
 
 
-    def nft():
-        # not really an arcade game, this is just us taking shots at millennials 
-        capture_key = "s"
-        save_name = "ctrl+c.png"
-
-        cc()
-        cd()
-
-        def message():
-            print(Fore.LIGHTGREEN_EX + "Free image finder by R-Bay, Carter, and Brandon")
-            print()
-            print("This will get you a free image, for FREE!")
-            print("It is going to open an NFT website")
-            print("Once it loads and NFTs are visible, hit " + capture_key)
-            print("Step 4: Profit.")
-            print("???")
-            print()
-        message()
-
-
-        ready = input(Fore.RED + "Hit enter to continue " + Fore.RESET)
-        if "menu" in ready:
-            ingame_menu(nft)
-
-
-        webbrowser.open("https://opensea.io/assets", autoraise=True) # shows NFTs
-        print("Waiting for keypress (" +  Fore.YELLOW + capture_key + ")")
-
-
-        def screenshot():
-            image = ImageGrab.grab(bbox=())
-            image.save(save_name)    # just copies the NFTs lol
-
-            image = PIL.Image.open(save_name)
-            image.show()             # shows NFTs to you for FREE! You now own an image for FREE!
-
-
-        def end():
-            os.system("cls" if os.name == "nt" else "clear")
-            print("Congrats! You now own pixels that you didn't have to pay for!")
-            print("Image saved in: " + os.getcwd())
-
-
-        while True:     # thanks google
-            try:        # used try so that if user pressed other than the given key error will not be shown
-                if keyboard.is_pressed(capture_key):  
-                    screenshot()
-                    end()
-                    break 
-            except:
-                break   # if user pressed a key other than the given key the loop will break
- 
-        ingame_menu(nft)
-
-
     def goodbye():
         bye_delay = 0.07
 
@@ -1012,7 +1082,7 @@ try:                # there is an error so you can read it
         sys.exit()
 
 
-    def main_menu_gui():    # souldnt even be a thing, tkinter is so old and broken...
+    def main_menu_gui():    # shouldnt even be a thing, tkinter is so old and broken...
         cc()
         print("300 GW time")
         time.sleep(1)
@@ -1021,6 +1091,7 @@ try:                # there is an error so you can read it
         print("(errors incoming)")
         time.sleep(1)
         input("Hit enter to continue...")
+        print("Menu GUI opened in new window")
 
         try:    # throws errors under the rug so the rest of the code can "continue"
             root_mg = Tk()
@@ -1125,10 +1196,11 @@ try:                # there is an error so you can read it
         print("4: Reaction Time Test")  # Only works on Windows. Its complicated why. ok not really
         print("5: Dice")
         print("6: Free images")
+        print("7: Inator Inator!")   # doof
         print()
-        print("7: Settings")
-        print("8: Quit Game")
-        print("X: To throw more errors than Reactor #4  ")  # Thank you to my friend Joseph for this FLAWLESS message
+        print("s: Settings")
+        print("q: Quit Game")
+        print("x: To throw more errors than Reactor #4  ")  # Thank you to my friend Joseph for this FLAWLESS message
 
         which_game = input("What would you like to do? ")
 
@@ -1150,9 +1222,9 @@ try:                # there is an error so you can read it
         elif "6" in which_game:
             cc()
             nft()
-        elif "7" in which_game: # you cant have <or> in one thing when next to <in>
+        elif "7" in which_game:
             cc()
-            settings_menu()
+            inator()
         elif "s" in which_game: 
             cc()
             settings_menu()
@@ -1170,16 +1242,14 @@ try:                # there is an error so you can read it
                 cc()
                 webbrowser.open("https://imgur.com/a/mYYsmRu", autoraise=False) # why
                 main_menu()
-        elif "8" in which_game:
-            goodbye()
-        elif "q" in which_game:
+        elif  "q" in which_game:
             goodbye()
         elif "r" in which_game and rickroll == True:
             cc()
             rickroll = 0         
             music_logic()
             main_menu()
-        elif "x" in which_game and rickroll == True:
+        elif "x" in which_game:
             main_menu_gui()
         else:
             cc()
