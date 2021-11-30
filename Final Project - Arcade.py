@@ -2,10 +2,11 @@
 
 # If it's worth doing, it's worth overdoing.
 # Thats why this is so long and painful
-    
+
 
 def main_notes():   # to collapse the text below in the IDE  
     """
+    NOTE
     Arcade for IFT101 final project
     11-29-21
     Written by Brandon, Carter, and R-Bay
@@ -32,7 +33,7 @@ def main_notes():   # to collapse the text below in the IDE
     # SPAGHETTI CODE STATUS: ITALIAN
     # HOURS WASTED ON DEBUGGING AND USELESS FEATURES SO FAR: 504
 
-version = "v1.5-beta2"
+version = "v1.5-beta.3"
 
 import traceback    # prevents the terminal from closing if
 try:                # there is an error so you can read it
@@ -60,7 +61,7 @@ try:                # there is an error so you can read it
     rickroll = 1
     global_cut_music = 1            # see message below
     game_count = 7                  # used for e_egg
-    enable_debug_flags_main = 0     # its sad that this is even a thing
+    enable_debug_flags_main = 1     # its sad that this is even a thing
     linux_mode = 0                  # only tested on Ubuntu, it works there
     music_vol = 0.7
 
@@ -140,9 +141,9 @@ try:                # there is an error so you can read it
         except:
             print(Fore.RED + "music_logic error")    
     music_logic()
-        
 
-    def gui_music():
+
+    def gui_music(): # NOTE toggle and volume not hooked up, exit closes entire program not just GUI
         try:
             def new_song_gui():
                 music_play()
@@ -160,7 +161,7 @@ try:                # there is an error so you can read it
                 width=600
             )
 
-            def test():
+            def test_sound():
                 pygame.mixer.music.load("GBsound.mp3")
                 pygame.mixer.music.play()
                 cc()
@@ -180,7 +181,7 @@ try:                # there is an error so you can read it
             menu.add.toggle_switch("Toggle Music")
             menu.add.range_slider("Volume",default=0.7, increment=1, range_values=(0, 1))
             menu.add.button("New Song", new_song_gui )
-            menu.add.button("Test Sound", test )
+            menu.add.button("Test Sound", test_sound)
             menu.add.button("Exit", pygame_menu.events.EXIT)
 
             menu.enable()
@@ -246,7 +247,7 @@ try:                # there is an error so you can read it
         This screws some things up.
         """
 
-
+        cc()
         # the plays but with colors
         rolla = Fore.GREEN + "rock"
         rollb = Fore.BLUE + "paper"
@@ -952,7 +953,7 @@ try:                # there is an error so you can read it
         print("1: Toggle Music")
         print("2: Toggle debugging mode")
         print("3: View Credits")
-        print("4: Open Document explaining this game")
+        print("4: Notes about this program")
         print("5: Music but in a bad gooey (very broken)")
         print()
         print("m: Go back to main menu")
@@ -1048,16 +1049,74 @@ try:                # there is an error so you can read it
         sys.exit()
 
 
-    def notes():
-        webbrowser.open("https://docs.google.com/document/d/1z0a9XA7nS2HSgqRiNl7OAoM2NchoCG0EkOCNeLv4DfM/edit?usp=sharing", autoraise=True)
-
-
     def new_mm_gui():
-        cc()
-        print("not a thing yet")
-        main_menu()
-        
+        try:
+            surface = pygame.display.set_mode((600, 800), pygame.RESIZABLE)
+            pygame.display.set_caption("Arcade " + version)
 
+            menu = pygame_menu.Menu(
+                height=500,
+                theme=pygame_menu.themes.THEME_DARK,
+                title="Main Menu",
+                width=600
+            )
+
+            def close():    # this doesnt work o irngpiw tnpigvbu2 4np 4pq
+                menu.disable()
+    
+            def about():
+                cc()
+                print("Opened Doc in browser")
+                webbrowser.open("https://docs.google.com/document/d/1z0a9XA7nS2HSgqRiNl7OAoM2NchoCG0EkOCNeLv4DfM/edit?usp=sharing", autoraise=True)
+    
+            # window resize stuff
+            def on_resize():
+                window_size = surface.get_size()
+                # border size multipliers
+                new_w, new_h = 0.9 * window_size[0], 0.92 * window_size[1]
+                menu.resize(new_w, new_h)
+                print(f"New menu size: {menu.get_size()}")
+
+            # options and buttons
+            menu.add.button("Rock Paper Scissors", rps)
+            menu.add.button("Bottle Flip", bottle_flip)
+            menu.add.button("Hangman", hangman)
+            menu.add.button("Reaction Time Test", reaction_time_test)
+            menu.add.button("Dice", dice)
+            menu.add.button("Free Images", nft)
+            menu.add.button("Inator Inator!", inator)
+            menu.add.button("",)    # creates a space between games and options
+            menu.add.button("Settings", settings_menu)
+            menu.add.button("Notes about this program", about)
+            menu.add.button("Return to CLI Menu", close)
+            menu.add.button("Quit", pygame_menu.events.EXIT)
+
+            menu.enable()
+            on_resize()  
+
+            # more window resize stuff
+            while True:
+                events = pygame.event.get()
+                for event in events:
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        break
+                    if event.type == pygame.VIDEORESIZE:
+                        surface = pygame.display.set_mode((event.w, event.h),
+                        pygame.RESIZABLE)
+                        on_resize()
+
+                    # border color
+                    surface.fill((100, 20, 240))
+                    menu.update(events)
+                    menu.draw(surface)
+                    pygame.display.flip()
+            
+        except:
+            print(traceback.format_exc())
+            print(Fore.RED + "New Main Menu GUI Error")
+
+ 
     def old_mm_gui():   # shouldn't even be a thing, tkinter is so old and broken...
         # I'm keeping the old one in for reasons
         try:    # throws errors under the rug so the rest of the code can "continue"
@@ -1145,6 +1204,11 @@ try:                # there is an error so you can read it
                     # Create a Label in New window
                     Label(new, text="Get flashbanged lol", font=("Tahoma 17 bold")).pack(pady=30)
 
+                def about():
+                    cc()
+                    print("Opened Doc in browser")
+                    webbrowser.open("https://docs.google.com/document/d/1z0a9XA7nS2HSgqRiNl7OAoM2NchoCG0EkOCNeLv4DfM/edit?usp=sharing", autoraise=True)
+        
 
                 # top menu bar
                 menu = Menu(root_mg)
@@ -1160,31 +1224,32 @@ try:                # there is an error so you can read it
                 helpmenu = Menu(menu, tearoff = 0)
                 menu.add_cascade(label="Help", menu=helpmenu)
                 helpmenu.add_command(label="How to Play", command=how_to_play)
-                helpmenu.add_command(label="About", command=notes)
+                helpmenu.add_command(label="About", command=about)
     
                 gui_main_menu()
                 root_mg.mainloop()
         except:
             cc()
+            print(Fore.RED + "Old Main Menu GUI Error")
             main_menu()
-      
+
 
     def main_menu_gui():    
         if enable_debug_flags_main == False:
             cc()
             print("300 GW time")
-            time.sleep(1)
+            time.sleep(0.5)
             print("Reactor #4 style")
-            time.sleep(1)
+            time.sleep(0.5)
             print("(errors incoming)")
-            time.sleep(1)
+            time.sleep(0.5)
 
             oldnew = input("Do you want the old GUI or the new one? o/n ")
             # I'm keeping the old one in for reasons
             if "n" in oldnew:
                 new_mm_gui()
 
-            print("Menu GUI opened in new window")
+            print("New Menu GUI opened in new window")
         else:
             cc()
             oldnew = input("Do you want the old GUI or the new one? o/n ")
@@ -1192,11 +1257,10 @@ try:                # there is an error so you can read it
             if "n" in oldnew:
                 new_mm_gui()
             
-
             print("Menu GUI opened in new window")
         old_mm_gui()
+    
         
-
     def main_menu():    # also contains easter egg code
         print("Arcade for IFT101 by Carter, R-Bay, and Brandon")
         print("November 2021")
@@ -1279,11 +1343,14 @@ try:                # there is an error so you can read it
             cc()
             rickroll = 0         
             music_logic()
-            main_menu()
         elif "x" in which_game:
             main_menu_gui()
+            #new_mm_gui()
         elif "n" in which_game:
-            notes()
+            cc()
+            print("Opened Doc in browser")
+            webbrowser.open("https://docs.google.com/document/d/1z0a9XA7nS2HSgqRiNl7OAoM2NchoCG0EkOCNeLv4DfM/edit?usp=sharing", autoraise=False)
+            main_menu()
         else:
             cc()
             print(Fore.RED + "Invalid input")
