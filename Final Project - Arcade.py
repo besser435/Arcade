@@ -4,12 +4,11 @@
 # Thats why this is so long and painful
     
 
-def main_notes():   # to collapse the text below in the IDE
+def main_notes():   # to collapse the text below in the IDE  
     """
     Arcade for IFT101 final project
     11-29-21
     Written by Brandon, Carter, and R-Bay
-    v1.5-beta1.1
     https://github.com/besser435/Arcade.py
 
 
@@ -33,11 +32,10 @@ def main_notes():   # to collapse the text below in the IDE
     # SPAGHETTI CODE STATUS: ITALIAN
     # HOURS WASTED ON DEBUGGING AND USELESS FEATURES SO FAR: 504
 
+version = "v1.5-beta2"
 
-from os import read
 import traceback    # prevents the terminal from closing if
 try:                # there is an error so you can read it
-
 
     import webbrowser, keyboard, random, pygame, time, sys, PIL, os
     from colorama import init                   # pip install colorama
@@ -46,6 +44,7 @@ try:                # there is an error so you can read it
     init(autoreset=True)
     pygame.init()                               # pip install pygame
     pygame.mixer.init()
+    import pygame_menu                          # pip install pygame_menu
     from time import perf_counter
     from statistics import mean
     from PIL import ImageGrab                   # pip install pillow
@@ -59,7 +58,7 @@ try:                # there is an error so you can read it
     # options
     enable_music = 1
     rickroll = 1
-    global_cut_music = 0            # see message below
+    global_cut_music = 1            # see message below
     game_count = 7                  # used for e_egg
     enable_debug_flags_main = 0     # its sad that this is even a thing
     linux_mode = 0                  # only tested on Ubuntu, it works there
@@ -141,95 +140,72 @@ try:                # there is an error so you can read it
         except:
             print(Fore.RED + "music_logic error")    
     music_logic()
+        
 
-
-    def gui_music():    # new pygame_menu is in the works! pog no more errors
-        def toggle_music_gui():
-            global enable_music
-            global rickroll
-            if not enable_music:
-                enable_music = 1
-                cc()
-                if global_cut_music == False: print("Music On")
+    def gui_music():
+        try:
+            def new_song_gui():
                 music_play()
-
-                size = len(rand_song)   # this only works sometimes for some reason
-                mod_string = rand_song[:size - 4] # removes file extension
-                print("Now playing: " + Fore.LIGHTMAGENTA_EX + mod_string)
-
-                #settings_menu() BUG causes runtime error
-
-            else:
                 cc()
-                enable_music = 0
-                if global_cut_music == False: print("Music Off")
-                pygame.mixer.music.fadeout(750)
-                rickroll = 0
+                settings_menu()
 
 
-        cc()
-        print("Close GUI to continue...")   # cant do anything else while its open
-        try:    # throws errors under the rug so the rest of the code can continue.
-            root = Tk()
+            surface = pygame.display.set_mode((600, 500), pygame.RESIZABLE)
+            pygame.display.set_caption("Arcade " + version)
+
+            menu = pygame_menu.Menu(
+                height=500,
+                theme=pygame_menu.themes.THEME_DARK,
+                title="Music Options",
+                width=600
+            )
+
+            def test():
+                pygame.mixer.music.load("GBsound.mp3")
+                pygame.mixer.music.play()
+                cc()
+                settings_menu()
+
+
+            # window resize stuff
+            def on_resize():
+                window_size = surface.get_size()
+                # border size multipliers
+                new_w, new_h = 0.93 * window_size[0], 0.9 * window_size[1]
+                menu.resize(new_w, new_h)
+                if enable_debug_flags_main == True: print(f"New menu size: {menu.get_size()}")
+
+
+            # options and buttons
+            menu.add.toggle_switch("Toggle Music")
+            menu.add.range_slider("Volume",default=0.7, increment=1, range_values=(0, 1))
+            menu.add.button("New Song", new_song_gui )
+            menu.add.button("Test Sound", test )
+            menu.add.button("Exit", pygame_menu.events.EXIT)
+
+            menu.enable()
+            on_resize()  
+
+            # more window resize stuff
             while True:
-                # options
-                buttonFont = font.Font(family="Comic Sans MS", size=15) # button text properties
-                set_cursor = "heart"    # trek
-                btn_color = "green"
-                btn_background = "gray60"
-                background_color = "gray15"
+                events = pygame.event.get()
+                for event in events:
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        break
+                    if event.type == pygame.VIDEORESIZE:
+                        surface = pygame.display.set_mode((event.w, event.h),
+                        pygame.RESIZABLE)
+                        on_resize()
 
-                
-                # window setup
-                root.title("peak ui design")
-                root.geometry("284x234")
-                root["bg"] = "gray15"   # keep this idk what it does
-
-                
-                label_font = font.Font(family="Comic Sans MS", size=15)
-                label1 = tk.Label(master=root, text="Music Options", bg=background_color,font=label_font,fg = "green2")
-                label1.grid(column=0, row=0)
-
-
-                def dark_mode():  #regular buttons. will go to light_mode if light mode is enabled in the options menu
-                    # Toggle
-                    btn_tog = Button(text = "Toggle Music", # this is kind of redundant because of the slider but ehhhhh
-                        fg = "green", command=toggle_music_gui, bg=btn_background, height=1, width=11, font=buttonFont, cursor=set_cursor)
-                    btn_tog.grid(column=0, row=1)
-
-                    # New Song
-                    btn_new = Button(root, text = "New Song",
-                        fg = btn_color, command=music_play, bg=btn_background, height=1, width=11, font=buttonFont, cursor=set_cursor)
-                    btn_new.grid(column=2, row=1)
-
-                    # Close - this is so errors arent thrown. use this instead of the X in Windows
-                    btn_new = Button(root, text = "Close",
-                        fg = "red3", command=root.destroy, bg=btn_background, height=1, width=11, font=buttonFont, cursor=set_cursor)
-                    btn_new.grid(column=2, row=2)
-
-
-                    # Volume 
-                    def update_vol(vol):
-                        global music_vol
-                        print(vol)
-                        music_vol = vol
-                        
-
-                    label_font = font.Font(family="Comic Sans MS", size=19)
-                    vol_lab = tk.Label(master=root, text="Volume", bg=background_color,font=label_font,fg = "green2")
-                    vol_lab.grid(column=0, row=5)
-
-                    vol_scale = Scale(orient=HORIZONTAL,bg="gray60", length=135, width=15, sliderlength=10, from_=0, to=1, resolution=0.1,
-                    tickinterval=0.1, command=update_vol)
-                    vol_scale.set(0.7)
-                    vol_scale.grid(column=0, row=6)
-                 
-
-                dark_mode()
-                root.mainloop()
+                    # border color
+                    surface.fill((100, 20, 240))
+                    menu.update(events)
+                    menu.draw(surface)
+                    pygame.display.flip()
+                    
         except:
-            cc()
-            settings_menu()
+            print(Fore.RED + "Music GUI error")
 
 
     def ingame_menu(replay_game):
@@ -979,8 +955,8 @@ try:                # there is an error so you can read it
         print("4: Open Document explaining this game")
         print("5: Music but in a bad gooey (very broken)")
         print()
-        print("6: Go back to main menu")
-        print("7: Quit Game")
+        print("m: Go back to main menu")
+        print("q: Quit Game")
         print()
         if global_cut_music == True:
             print("Music toggle disabled for compatibility")
@@ -1019,19 +995,17 @@ try:                # there is an error so you can read it
             print("Opened Doc in browser")
             webbrowser.open("https://docs.google.com/document/d/1z0a9XA7nS2HSgqRiNl7OAoM2NchoCG0EkOCNeLv4DfM/edit?usp=sharing", autoraise=False)
             settings_menu()
-        elif "s" in which_setting:
-            cc()
-            main_menu()
         elif "5" in which_setting:
             cc()
             gui_music()
-        elif "6" in which_setting:
+        elif "s" in which_setting:
             cc()
             main_menu()
-        elif "7" in which_setting:
-           goodbye()
+        elif "m" in which_setting:
+            cc()
+            main_menu()
         elif "q" in which_setting:
-            goodbye()
+           goodbye()
         else:
             cc()
             print()
@@ -1078,24 +1052,14 @@ try:                # there is an error so you can read it
         webbrowser.open("https://docs.google.com/document/d/1z0a9XA7nS2HSgqRiNl7OAoM2NchoCG0EkOCNeLv4DfM/edit?usp=sharing", autoraise=True)
 
 
-    def main_menu_gui():    # shouldn't even be a thing, tkinter is so old and broken...
-        if enable_debug_flags_main == False:
-            cc()
-            print("300 GW time")
-            time.sleep(1)
-            print("Reactor #4 style")
-            time.sleep(1)
-            print("(errors incoming)")
-            time.sleep(1)
-            input("Hit enter to continue...")
-            print("Menu GUI opened in new window")
-        else:
-            cc()
-            print("300 GW time")
-            print("Reactor #4 style")
-            print("(errors incoming)")
-            print("Menu GUI opened in new window")
+    def new_mm_gui():
+        cc()
+        print("not a thing yet")
+        main_menu()
+        
 
+    def old_mm_gui():   # shouldn't even be a thing, tkinter is so old and broken...
+        # I'm keeping the old one in for reasons
         try:    # throws errors under the rug so the rest of the code can "continue"
             root_mg = Tk()
             while True:
@@ -1203,11 +1167,40 @@ try:                # there is an error so you can read it
         except:
             cc()
             main_menu()
+      
 
+    def main_menu_gui():    
+        if enable_debug_flags_main == False:
+            cc()
+            print("300 GW time")
+            time.sleep(1)
+            print("Reactor #4 style")
+            time.sleep(1)
+            print("(errors incoming)")
+            time.sleep(1)
+
+            oldnew = input("Do you want the old GUI or the new one? o/n ")
+            # I'm keeping the old one in for reasons
+            if "n" in oldnew:
+                new_mm_gui()
+
+            print("Menu GUI opened in new window")
+        else:
+            cc()
+            oldnew = input("Do you want the old GUI or the new one? o/n ")
+            # I'm keeping the old one in for reasons
+            if "n" in oldnew:
+                new_mm_gui()
+            
+
+            print("Menu GUI opened in new window")
+        old_mm_gui()
+        
 
     def main_menu():    # also contains easter egg code
         print("Arcade for IFT101 by Carter, R-Bay, and Brandon")
         print("November 2021")
+        print(version)
         global rickroll
         global enable_music
         if enable_debug_flags_main == True:
@@ -1300,4 +1293,5 @@ try:                # there is an error so you can read it
 
 except Exception:
     print(traceback.format_exc())
+    print(Fore.RED + "error")
     input("Press enter to exit")
