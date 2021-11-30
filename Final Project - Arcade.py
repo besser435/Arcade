@@ -59,9 +59,9 @@ try:                # there is an error so you can read it
     # options
     enable_music = 1
     rickroll = 1
-    global_cut_music = 1            # see message below
+    global_cut_music = 0            # see message below
     game_count = 7                  # used for e_egg
-    enable_debug_flags_main = 1     # its sad that this is even a thing
+    enable_debug_flags_main = 0     # its sad that this is even a thing
     linux_mode = 0                  # only tested on Ubuntu, it works there
     music_vol = 0.7
 
