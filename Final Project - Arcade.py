@@ -33,7 +33,7 @@ def main_notes():   # to collapse the text below in the IDE
     # SPAGHETTI CODE STATUS: ITALIAN
     # HOURS WASTED ON DEBUGGING AND USELESS FEATURES SO FAR: 504
 
-version = "v1.5-beta.3"
+version = "v1.5-beta.3.1"
 
 import traceback    # prevents the terminal from closing if
 try:                # there is an error so you can read it
@@ -107,23 +107,23 @@ try:                # there is an error so you can read it
 
 
     def music_play():
-        try:    # music stuff can be prone to errors, so thats why it is special and gets its own thing
+        #try:    # music stuff can be prone to errors, so thats why it is special and gets its own thing
             global current_song
             global rand_song
             global music_vol
             songs = ["Climate Nuclear.mp3", "The Egg.mp3", "Nuclear Death Toll.mp3"]
             rand_song = random.choice(songs)
             pygame.mixer.music.set_volume(music_vol)
-            print(music_vol)
+            #print(music_vol)
             
             if enable_music == True:
                 if global_cut_music == False:     # its in music_logic, but still needed. sometimes logic is skipped
-                    for x in range(1):  #IDK why by PyGame needs audio in loops (I think)
+                    for x in range(1):  #IDK why but PyGame needs audio in loops (I think)
                         pygame.mixer.music.load(rand_song)   # egg
                         pygame.mixer.music.play(fade_ms = 4000)
                         pygame.event.wait()
-        except:
-            print(Fore.RED + "music_play error")    
+        #except:
+            #print(Fore.RED + "music_play error")    
 
 
     def music_logic():
@@ -143,70 +143,96 @@ try:                # there is an error so you can read it
     music_logic()
 
 
-    def gui_music(): # NOTE toggle and volume not hooked up, exit closes entire program not just GUI
-        try:
-            def new_song_gui():
+    def gui_music(): 
+        # NOTE toggle not hooked up, volume broken
+        def toggle_music_gui():
+            global enable_music
+            global rickroll
+            if not enable_music:
+                enable_music = 1
+                cc()
+                if global_cut_music == False: print("Music On")
                 music_play()
+
+                size = len(rand_song)   # this only works sometimes for some reason
+                mod_string = rand_song[:size - 4] # removes file extension
+                print("Now playing: " + Fore.LIGHTMAGENTA_EX + mod_string)
+
+                #settings_menu() BUG causes runtime error
+
+            else:
                 cc()
-                settings_menu()
+                enable_music = 0
+                if global_cut_music == False: print("Music Off")
+                pygame.mixer.music.fadeout(750)
+                rickroll = 0
 
 
-            surface = pygame.display.set_mode((600, 500), pygame.RESIZABLE)
-            pygame.display.set_caption("Arcade " + version)
-
-            menu = pygame_menu.Menu(
-                height=500,
-                theme=pygame_menu.themes.THEME_DARK,
-                title="Music Options",
-                width=600
-            )
-
-            def test_sound():
-                pygame.mixer.music.load("GBsound.mp3")
-                pygame.mixer.music.play()
-                cc()
-                settings_menu()
-
-
-            # window resize stuff
-            def on_resize():
-                window_size = surface.get_size()
-                # border size multipliers
-                new_w, new_h = 0.93 * window_size[0], 0.9 * window_size[1]
-                menu.resize(new_w, new_h)
-                if enable_debug_flags_main == True: print(f"New menu size: {menu.get_size()}")
-
-
-            # options and buttons
-            menu.add.toggle_switch("Toggle Music")
-            menu.add.range_slider("Volume",default=0.7, increment=1, range_values=(0, 1))
-            menu.add.button("New Song", new_song_gui )
-            menu.add.button("Test Sound", test_sound)
-            menu.add.button("Exit", pygame_menu.events.EXIT)
-
-            menu.enable()
-            on_resize()  
-
-            # more window resize stuff
+        cc()
+        print("Close GUI to continue...")   # cant do anything else while its open
+        try:    # throws errors unde the rug so the rest of the code can continue.
+            root = Tk()
             while True:
-                events = pygame.event.get()
-                for event in events:
-                    if event.type == pygame.QUIT:
-                        pygame.quit()
-                        break
-                    if event.type == pygame.VIDEORESIZE:
-                        surface = pygame.display.set_mode((event.w, event.h),
-                        pygame.RESIZABLE)
-                        on_resize()
+                # options
+                buttonFont = font.Font(family="Comic Sans MS", size=15) # button text properties
+                set_cursor = "heart"    # trek
+                btn_color = "green"
+                btn_background = "gray60"
+                background_color = "gray15"
 
-                    # border color
-                    surface.fill((100, 20, 240))
-                    menu.update(events)
-                    menu.draw(surface)
-                    pygame.display.flip()
+                
+                # window setup
+                root.title("peak ui design")
+                root.geometry("284x234")
+                root["bg"] = "gray15"   # keep this idk what it does
+
+                
+                label_font = font.Font(family="Comic Sans MS", size=15)
+                label1 = tk.Label(master=root, text="Music Options", bg=background_color,font=label_font,fg = "green2")
+                label1.grid(column=0, row=0)
+
+
+                def change_vol(vol):
+                    global music_vol
+                    music_vol = float(vol)
+                    #print(vol)
+                    music_play()
+
+
+                def dark_mode():  #regular buttons. will go to light_mode if light mode is enabled in the options menu
+                    # Toggle
+                    btn_tog = Button(text = "Toggle Music", # this is kind of redundant because of the slider but ehhhhh
+                        fg = "green", command=toggle_music_gui, bg=btn_background, height=1, width=11, font=buttonFont, cursor=set_cursor)
+                    btn_tog.grid(column=0, row=1)
+
+                    # New Song
+                    btn_new = Button(root, text = "New Song",
+                        fg = btn_color, command=music_play, bg=btn_background, height=1, width=11, font=buttonFont, cursor=set_cursor)
+                    btn_new.grid(column=2, row=1)
+
+                    # Close - this is so errors arent thrown. use this instead of the X in Windows
+                    btn_new = Button(root, text = "Close",
+                        fg = "red3", command=root.destroy, bg=btn_background, height=1, width=11, font=buttonFont, cursor=set_cursor)
+                    btn_new.grid(column=2, row=2)
+
+                    # Volume 
+                    label_font = font.Font(family="Comic Sans MS", size=19)
+                    vol_lab = tk.Label(root, text="Volume", bg=background_color,font=label_font,fg = "green2")
+                    vol_lab.grid(column=0, row=5)
+
+                    # Can't get past 0.4 for some reason. But it's so broken and useless I don't really care
+                    vol_scale = Scale(root, command=change_vol, orient=HORIZONTAL,bg="gray60", length=135, width=15, 
+                    sliderlength=10, from_=0, to=1.0, resolution=0.1, tickinterval=0.2)
+                    vol_scale.set(music_vol)
                     
+                    vol_scale.grid(column=0, row=6)
+                                        
+
+                dark_mode()
+                root.mainloop()
         except:
-            print(Fore.RED + "Music GUI error")
+            cc()
+            settings_menu()
 
 
     def ingame_menu(replay_game):
@@ -1351,6 +1377,8 @@ try:                # there is an error so you can read it
             print("Opened Doc in browser")
             webbrowser.open("https://docs.google.com/document/d/1z0a9XA7nS2HSgqRiNl7OAoM2NchoCG0EkOCNeLv4DfM/edit?usp=sharing", autoraise=False)
             main_menu()
+        elif "a" in which_game:  # shortcut to current work
+            gui_music()     
         else:
             cc()
             print(Fore.RED + "Invalid input")
