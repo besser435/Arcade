@@ -33,7 +33,7 @@ def main_notes():   # to collapse the text below in the IDE
     # SPAGHETTI CODE STATUS: ITALIAN
     # HOURS WASTED ON DEBUGGING AND USELESS FEATURES SO FAR: 504
 
-version = "v1.5-beta.3.1"
+version = "v1.5"
 
 import traceback    # prevents the terminal from closing if
 try:                # there is an error so you can read it
@@ -60,7 +60,7 @@ try:                # there is an error so you can read it
     enable_music = 1
     rickroll = 1
     global_cut_music = 0            # see message below
-    game_count = 7                  # used for e_egg
+    game_count = 8                  # used for e_egg
     enable_debug_flags_main = 0     # its sad that this is even a thing
     linux_mode = 0                  # only tested on Ubuntu, it works there
     music_vol = 0.7
@@ -259,6 +259,8 @@ try:                # there is an error so you can read it
                 goodbye()
             else:
                 ingame_menu(replay_game)
+
+
 
 
     def rps():
@@ -934,6 +936,123 @@ try:                # there is an error so you can read it
         ingame_menu(inator)
 
 
+    def ttt():
+        # Full disclosure, we borrowed some code from 
+        # the internet, changed it to fit our needs and
+        # cleaned up the messy bits
+
+        # add version of the board that changes it so
+        # it line up with a numpad
+        
+        # menu at the bottom
+        global e_egg
+        e_egg += 1
+
+
+        board_places = {"1": " " , "2": " " , "3": " " ,
+                        "4": " " , "5": " " , "6": " " ,
+                        "7": " " , "8": " " , "9": " " }
+
+        board_keys = []
+
+        for key in board_places:
+            board_keys.append(key)
+
+        def display_board(board):
+            print(board["1"] + "|" + board["2"] + "|" + board["3"])
+            print("-+-+-")
+            print(board["4"] + "|" + board["5"] + "|" + board["6"])
+            print("-+-+-")
+            print(board["7"] + "|" + board["8"] + "|" + board["9"])
+        
+        
+        def game():
+            turn = "X"
+            count = 0
+
+
+            def gg(how):
+                if how == 0: 
+                    print()
+                    print(Fore.RED + "Game Over")                
+                    print(Fore.GREEN + turn + " won!")
+                else:   
+                    print()
+                    print(Fore.YELLOW + "Game Over")
+                    print(Fore.GREEN + "It's a Tie!")
+
+
+            for i in range(10):
+                display_board(board_places)
+                print(Fore.YELLOW + "It's your turn, " + turn + ". Move to which place? ")
+
+                move = input()    
+                if "menu" in move:
+                    ingame_menu(ttt)    
+
+                if board_places[move] == " ":
+                    board_places[move] = turn
+                    count += 1
+                else:
+                    print("Dummy, that spot is filled. Move to which place")
+                    continue
+
+
+                # Win/loose/tie checks
+                if count >= 5:
+                    if board_places["1"] == board_places["2"] == board_places["3"] != " ":   # across the top
+                        display_board(board_places)
+                        gg(0)              
+                        break
+                    elif board_places["4"] == board_places["5"] == board_places["6"] != " ": # across the middle
+                        display_board(board_places)
+                        gg(0)
+                        break
+                    elif board_places["7"] == board_places["8"] == board_places["9"] != " ": # across the bottom
+                        display_board(board_places)
+                        gg(0)
+                        break
+
+
+                    elif board_places["1"] == board_places["4"] == board_places["7"] != " ": # down the left
+                        display_board(board_places)
+                        gg(0)
+                        break
+                    elif board_places["2"] == board_places["5"] == board_places["8"] != " ": # down the middle
+                        display_board(board_places)
+                        gg(0)
+                        break
+                    elif board_places["3"] == board_places["6"] == board_places["9"] != " ": # down the right
+                        display_board(board_places)
+                        gg(0)
+                        break 
+                    
+
+                    elif board_places["1"] == board_places["5"] == board_places["9"] != " ": # diagonal
+                        display_board(board_places)
+                        gg(0)
+                        break
+                    elif board_places["3"] == board_places["5"] == board_places["7"] != " ": # diagonal
+                        display_board(board_places)
+                        gg(0)
+                        break 
+
+                # Tie
+                if count == 9:
+                    gg(1)
+ 
+
+                # Swap turns
+                if turn =="X":
+                    turn = "O"
+                else:
+                    turn = "X"        
+            ingame_menu(ttt)
+        game()
+
+
+
+
     def game_credits():
         print("Thanks for playing!")
         time.sleep(1)
@@ -1264,11 +1383,13 @@ try:                # there is an error so you can read it
         if enable_debug_flags_main == False:
             cc()
             print("300 GW time")
-            time.sleep(0.5)
+            time.sleep(0.8)
             print("Reactor #4 style")
-            time.sleep(0.5)
+            time.sleep(0.8)
             print("(errors incoming)")
-            time.sleep(0.5)
+            time.sleep(0.8)
+            print("No longer supported, not being updated to match CLI")
+            print()
 
             oldnew = input("Do you want the old GUI or the new one? o/n ")
             # I'm keeping the old one in for reasons
@@ -1317,6 +1438,7 @@ try:                # there is an error so you can read it
         print("5: Dice")
         print("6: Free images")
         print("7: Inator Inator!")   # doof
+        print("8: Tic Tac Toe (You need a friend. Too bad you dont have any.)")
         print()
         print("s: Settings")
         print("n: Notes about this program")
@@ -1346,6 +1468,17 @@ try:                # there is an error so you can read it
         elif "7" in which_game:
             cc()
             inator()
+        elif "8" in which_game:
+            cc()
+            ttt()
+        elif "d" in which_game:
+                enable_music = 0
+                if global_cut_music == False:
+                    pygame.mixer.music.fadeout(750)
+                    rickroll = 0
+                    cc()
+                    print("Music Off")
+                    main_menu()
         elif "s" in which_game: 
             cc()
             settings_menu()
