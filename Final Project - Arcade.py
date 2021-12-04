@@ -38,7 +38,7 @@ version = "v1.5.1"
 import traceback    # prevents the terminal from closing if
 try:                # there is an error so you can read it
 
-    import webbrowser, keyboard, random, pygame, time, sys, PIL, os
+    import webbrowser, keyboard, random, pygame, gtts, time, sys, PIL, os
     from colorama import init                   # pip install colorama
     init()
     from colorama import Fore, Back, Style
@@ -57,7 +57,7 @@ try:                # there is an error so you can read it
 
 
     # options
-    enable_music = 0
+    enable_music = 1
     rickroll = 1
     global_cut_music = 0            # see message below
     game_count = 8                  # used for e_egg
@@ -904,12 +904,13 @@ try:                # there is an error so you can read it
         # Pretty much everyone in my generation will understand and appreciate it
         # If you don't know what I'm talking about, here is this: https://bit.ly/3ldUkDa
         # The best inator in my opinion: https://www.youtube.com/watch?v=n4TNdWxMX1Q
+        global inatorify
         global e_egg
         e_egg += 1
 
         print("The Inator-Inator!")
         print()
-
+        
         inatorify = input("What would you like to inatorify? ")
 
         rand_msg = random.randint(0,5)
@@ -931,6 +932,25 @@ try:                # there is an error so you can read it
         elif rand_msg == 3:
             print("Perry the Platypus, this is my " + inatorify + "-inator!")
 
+        
+        """ 
+        Future dohickey.  audio inatorificator-inator
+        
+        pygame.mixer.music.load("behold.mp3")
+        pygame.mixer.music.play()
+        time.sleep(1)
+
+        tts = gtts.gTTS(inatorify)
+        tts.save("inatorify.mp3")
+        pygame.mixer.music.load("inatorify.mp3")
+        pygame.mixer.music.play()
+
+        time.sleep(1.5) # Find a way to just wait until previous sound is done. hard coding it is bad
+        pygame.mixer.music.load("inator.mp3")
+        pygame.mixer.music.play()
+        """
+        
+        
         ingame_menu(inator)
 
 
