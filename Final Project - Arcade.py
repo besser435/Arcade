@@ -1,14 +1,14 @@
 
 
 # If it's worth doing, it's worth overdoing.
-# Thats why this is so long and painful
+# Thats why this is so long and painful.
 
 
 def main_notes():   # to collapse the text below in the IDE  
     """
     NOTE
     Arcade for IFT101 final project
-    11-29-21
+    12-4-21
     Written by Brandon, Carter, and R-Bay
     https://github.com/besser435/Arcade.py
 
@@ -31,9 +31,9 @@ def main_notes():   # to collapse the text below in the IDE
     lazy to copy and paste the stuff below
     """
     # SPAGHETTI CODE STATUS: ITALIAN
-    # HOURS WASTED ON DEBUGGING AND USELESS FEATURES SO FAR: 504
+    # HOURS WASTED ON DEBUGGING AND USELESS FEATURES SO FAR: 613
 
-version = "v1.5"
+version = "v1.5.1"
 
 import traceback    # prevents the terminal from closing if
 try:                # there is an error so you can read it
@@ -57,7 +57,7 @@ try:                # there is an error so you can read it
 
 
     # options
-    enable_music = 1
+    enable_music = 0
     rickroll = 1
     global_cut_music = 0            # see message below
     game_count = 8                  # used for e_egg
@@ -253,12 +253,6 @@ try:                # there is an error so you can read it
             main_menu()
         elif "q" in ask_menu:
             goodbye()
-        else:
-            quit = input("Are you sure? y/n ")
-            if quit == "y":
-                goodbye()
-            else:
-                ingame_menu(replay_game)
 
 
 
@@ -266,7 +260,7 @@ try:                # there is an error so you can read it
     def rps():
         """
         RPS By Brandon. Carter, and R-Bay
-        V1.6-IFT
+        V1.7-IFT
         November 2021
 
         This version has changes over the normal V1.6 because
@@ -648,6 +642,7 @@ try:                # there is an error so you can read it
         while guesses_left > 0:
             output = ""
             if enable_debug_flags_main == 1: print(Fore.YELLOW + "chosen word is: " + chosen_word)
+
             print(Fore.CYAN + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
             for letter in chosen_word:
                 if letter in guesses:
@@ -671,11 +666,14 @@ try:                # there is an error so you can read it
 
             else:
                 if guess in guesses or guess in wrong_guesses:
+                    cc()
                     print(Fore.RED + "Already entered, try again")
                 elif guess in chosen_word:
+                    cc()
                     print(Fore.GREEN + "Correct guess")
                     guesses.append(guess)
                 else:
+                    cc()
                     print(Fore.RED + "Incorrect guess")
                     guesses_left = guesses_left - 1     # revolutionary tech
                     wrong_guesses.append(guess)
@@ -937,118 +935,127 @@ try:                # there is an error so you can read it
 
 
     def ttt():
-        # Full disclosure, we borrowed some code from 
-        # the internet, changed it to fit our needs and
-        # cleaned up the messy bits
+        try:
+            """
+            Full disclosure, we borrowed some code from 
+            the internet, changed it to fit our needs and
+            cleaned up the messy bits
 
-        # add version of the board that changes it so
-        # it line up with a numpad
-        
-        # menu at the bottom
-        global e_egg
-        e_egg += 1
-
-
-        board_places = {"1": " " , "2": " " , "3": " " ,
-                        "4": " " , "5": " " , "6": " " ,
-                        "7": " " , "8": " " , "9": " " }
-
-        board_keys = []
-
-        for key in board_places:
-            board_keys.append(key)
-
-        def display_board(board):
-            print(board["1"] + "|" + board["2"] + "|" + board["3"])
-            print("-+-+-")
-            print(board["4"] + "|" + board["5"] + "|" + board["6"])
-            print("-+-+-")
-            print(board["7"] + "|" + board["8"] + "|" + board["9"])
-        
-        
-        def game():
-            turn = "X"
-            count = 0
+            add version of the board that changes it so
+            it line up with a numpad
+            """
 
 
-            def gg(how):
-                if how == 0: 
-                    print()
-                    print(Fore.RED + "Game Over")                
-                    print(Fore.GREEN + turn + " won!")
-                else:   
-                    print()
-                    print(Fore.YELLOW + "Game Over")
-                    print(Fore.GREEN + "It's a Tie!")
+            global e_egg
+            e_egg += 1
 
 
-            for i in range(10):
-                display_board(board_places)
-                print(Fore.YELLOW + "It's your turn, " + turn + ". Move to which place? ")
+            board_places = {"1": " " , "2": " " , "3": " " ,
+                            "4": " " , "5": " " , "6": " " ,
+                            "7": " " , "8": " " , "9": " " }
 
-                move = input()    
-                if "menu" in move:
-                    ingame_menu(ttt)    
+            board_keys = []
 
-                if board_places[move] == " ":
-                    board_places[move] = turn
-                    count += 1
-                else:
-                    print("Dummy, that spot is filled. Move to which place")
-                    continue
+            for key in board_places:
+                board_keys.append(key)
 
+            def display_board(board):
+                print(board["1"] + "|" + board["2"] + "|" + board["3"])
+                print("-+-+-")
+                print(board["4"] + "|" + board["5"] + "|" + board["6"])
+                print("-+-+-")
+                print(board["7"] + "|" + board["8"] + "|" + board["9"])
 
-                # Win/loose/tie checks
-                if count >= 5:
-                    if board_places["1"] == board_places["2"] == board_places["3"] != " ":   # across the top
-                        display_board(board_places)
-                        gg(0)              
-                        break
-                    elif board_places["4"] == board_places["5"] == board_places["6"] != " ": # across the middle
-                        display_board(board_places)
-                        gg(0)
-                        break
-                    elif board_places["7"] == board_places["8"] == board_places["9"] != " ": # across the bottom
-                        display_board(board_places)
-                        gg(0)
-                        break
+            def game():
+                turn = "X"
+                count = 0
 
 
-                    elif board_places["1"] == board_places["4"] == board_places["7"] != " ": # down the left
-                        display_board(board_places)
-                        gg(0)
-                        break
-                    elif board_places["2"] == board_places["5"] == board_places["8"] != " ": # down the middle
-                        display_board(board_places)
-                        gg(0)
-                        break
-                    elif board_places["3"] == board_places["6"] == board_places["9"] != " ": # down the right
-                        display_board(board_places)
-                        gg(0)
-                        break 
-                    
+                def gg(how):
+                    if how == 0: 
+                        print()
+                        print(Fore.YELLOW + "Game Over")                
+                        print(Fore.GREEN + turn + " won!")
+                    else:   
+                        print()
+                        print(Fore.YELLOW + "Game Over")
+                        print(Fore.GREEN + "It's a Tie!")
 
-                    elif board_places["1"] == board_places["5"] == board_places["9"] != " ": # diagonal
-                        display_board(board_places)
-                        gg(0)
-                        break
-                    elif board_places["3"] == board_places["5"] == board_places["7"] != " ": # diagonal
-                        display_board(board_places)
-                        gg(0)
-                        break 
 
-                # Tie
-                if count == 9:
-                    gg(1)
- 
+                for i in range(10):
+                    display_board(board_places)
+                    print(Fore.YELLOW + "It's your turn, " + turn + ". Move to which place? ")
 
-                # Swap turns
-                if turn =="X":
-                    turn = "O"
-                else:
-                    turn = "X"        
-            ingame_menu(ttt)
-        game()
+                    move = input()    
+                    if "menu" in move:
+                        ingame_menu(ttt)    
+
+                    if board_places[move] == " ":
+                        board_places[move] = turn
+                        count += 1
+                        cc()
+                    else:
+                        cc()
+                        print(Fore.RED + "Dummy, that spot is filled. Choose another place.")
+                        continue
+
+
+                    # Win/loose/tie checks
+                    if count >= 5:
+                        if board_places["1"] == board_places["2"] == board_places["3"] != " ":   # across the top
+                            display_board(board_places)
+                            gg(0)              
+                            break
+                        elif board_places["4"] == board_places["5"] == board_places["6"] != " ": # across the middle
+                            display_board(board_places)
+                            gg(0)
+                            break
+                        elif board_places["7"] == board_places["8"] == board_places["9"] != " ": # across the bottom
+                            display_board(board_places)
+                            gg(0)
+                            break
+
+
+                        elif board_places["1"] == board_places["4"] == board_places["7"] != " ": # down the left
+                            display_board(board_places)
+                            gg(0)
+                            break
+                        elif board_places["2"] == board_places["5"] == board_places["8"] != " ": # down the middle
+                            display_board(board_places)
+                            gg(0)
+                            break
+                        elif board_places["3"] == board_places["6"] == board_places["9"] != " ": # down the right
+                            display_board(board_places)
+                            gg(0)
+                            break 
+                        
+
+                        elif board_places["1"] == board_places["5"] == board_places["9"] != " ": # diagonal
+                            display_board(board_places)
+                            gg(0)
+                            break
+                        elif board_places["3"] == board_places["5"] == board_places["7"] != " ": # diagonal
+                            display_board(board_places)
+                            gg(0)
+                            break 
+
+                    # Tie
+                    if count == 9:
+                        gg(1)
+    
+
+                    # Swap turns
+                    if turn == "X":
+                        turn = "O"
+                    else:
+                        turn = "X"        
+                ingame_menu(ttt)
+            game()
+
+        except:
+            cc()
+            print(Fore.RED + "TTT Error. Hit an invalid key.")  # chad level fix for when you don't enter a valid key
+            main_menu()
 
 
 
@@ -1094,7 +1101,7 @@ try:                # there is an error so you can read it
         global enable_music
         global rickroll
         global enable_debug_flags_main
-        print("Settings options are:")
+        print(Fore.LIGHTGREEN_EX + "Settings options are:")
         print("1: Toggle Music")
         print("2: Toggle debugging mode")
         print("3: View Credits")
@@ -1410,7 +1417,7 @@ try:                # there is an error so you can read it
         
     def main_menu():    # also contains easter egg code
         print("Arcade for IFT101 by Carter, R-Bay, and Brandon")
-        print("November 2021")
+        print("December 2021")
         print(version)
         global rickroll
         global enable_music
@@ -1430,7 +1437,7 @@ try:                # there is an error so you can read it
         print('Type "menu" during a game to show the menu')
         print(Fore.CYAN + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         print()
-        print("Game options are:")
+        print(Fore.LIGHTGREEN_EX + "Game options are:")
         print("1: Rock Paper scissors")
         print("2: Bottle Flip")
         print("3: Hangman")
@@ -1521,5 +1528,5 @@ try:                # there is an error so you can read it
 
 except Exception:
     print(traceback.format_exc())
-    print(Fore.RED + "error")
+    print(Fore.RED + "Global Error")
     input("Press enter to exit")
