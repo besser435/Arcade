@@ -5,6 +5,7 @@ pip install keyboard
 pip install pillow
 pip install pynput
 pip install pygame
+:: pip install gtts  -not added yet
 pip install art
 pip install tk
 pause

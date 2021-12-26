@@ -8,7 +8,7 @@ def main_notes():   # to collapse the text below in the IDE
     """
     NOTE
     Arcade for IFT101 final project
-    12-4-21
+    Submitted on 12-4-21
     Written by Brandon, Carter, and R-Bay
     https://github.com/besser435/Arcade.py
 
@@ -29,16 +29,17 @@ def main_notes():   # to collapse the text below in the IDE
     This game requires a few libraries, they can be found below.
     A batch file is included if you dont have them or are too
     lazy to copy and paste the stuff below
+
     """
     # SPAGHETTI CODE STATUS: ITALIAN
-    # HOURS WASTED ON DEBUGGING AND USELESS FEATURES SO FAR: 613
+    # HOURS WASTED ON DEBUGGING AND USELESS FEATURES SO FAR: 614
 
-version = "v1.5.1"
+version = "v1.5.3"
 
 import traceback    # prevents the terminal from closing if
 try:                # there is an error so you can read it
 
-    import webbrowser, keyboard, random, pygame, gtts, time, sys, PIL, os
+    import webbrowser, keyboard, random, pygame, time, sys, PIL, os   # pip install gtts
     from colorama import init                   # pip install colorama
     init()
     from colorama import Fore, Back, Style
@@ -260,8 +261,7 @@ try:                # there is an error so you can read it
     def rps():
         """
         RPS By Brandon. Carter, and R-Bay
-        V1.7-IFT
-        November 2021
+        December 2021
 
         This version has changes over the normal V1.6 because
         all of this version of the game has to go in a function
@@ -269,6 +269,8 @@ try:                # there is an error so you can read it
         This screws some things up.
         """
 
+        version = "v1.7.1"
+        
         cc()
         # the plays but with colors
         rolla = Fore.GREEN + "rock"
@@ -292,7 +294,7 @@ try:                # there is an error so you can read it
         comp_history = []
 
 
-        print(Fore.BLUE + Back.YELLOW + "Rock Paper Scissors by Brandon, Carter, and R-Bay | V1.7-IFT101 | November 2021")
+        print(Fore.BLUE + Back.YELLOW + "Rock Paper Scissors by Brandon, Carter, and R-Bay | " + version + " | November 2021")
         print("First to " + str(match_point) + " points wins!")
 
 
@@ -349,7 +351,6 @@ try:                # there is an error so you can read it
                         ingame_menu(rps)
 
                     if "y" in ask_for_super_rig:
-                    
                         enable_super_rig = True
                         print("Game is rigged: rig = " + str(enable_rig) + " super rig = " + str(enable_super_rig))
                         Operation_Asteroid2()
@@ -935,6 +936,7 @@ try:                # there is an error so you can read it
         
         """ 
         Future dohickey.  audio inatorificator-inator
+        add gtts to bat file
         
         pygame.mixer.music.load("behold.mp3")
         pygame.mixer.music.play()
@@ -950,7 +952,7 @@ try:                # there is an error so you can read it
         pygame.mixer.music.play()
         """
         
-        
+
         ingame_menu(inator)
 
 
@@ -1525,10 +1527,11 @@ try:                # there is an error so you can read it
                 main_menu()
         elif "q" in which_game:
             goodbye()
-        elif "r" in which_game and rickroll == True:
-            cc()
+        elif "r" in which_game and rickroll == True:                                
             rickroll = 0         
             music_logic()
+            cc()
+            main_menu()
         elif "x" in which_game:
             main_menu_gui()
             #new_mm_gui()
