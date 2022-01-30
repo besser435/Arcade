@@ -1,26 +1,18 @@
-
-
-# If it's worth doing, it's worth overdoing.
-# Thats why this is so long and painful.
-
-
-def main_notes():   # to collapse the text below in the IDE  
+def main_notes(): 
     """
     NOTE
     This is a cut down version of my regular arcade game. This is
     because I eventually want to run it on a Feather/Arduino with a
     little display, and I dont need the extras like the audio or
-    colored tet for that
+    colored text for that
 
     """
-    # SPAGHETTI CODE STATUS: ITALIAN
-    # HOURS WASTED ON DEBUGGING AND USELESS FEATURES SO FAR: 614
 
 version = "v0.1"
 
 
-import random, time, sys, os   # pip install gtts
-from time import perf_counter
+import random, time, os
+
 #from statistics import mean
 
 
@@ -733,7 +725,8 @@ def game_credits():
 def settings_menu():
     global enable_debug_flags_main
     print("Settings options are:")
-    print("3: View Credits")
+    print("1: View Credits")
+    print("2: Debugging Mode")
     print()
     print("m: Go back to main menu")
     print("q: Quit Game")
@@ -752,7 +745,7 @@ def settings_menu():
             cc()
             print("Global Debugging Mode Disabled")
             settings_menu()
-    elif "3" in which_setting:
+    elif "1" in which_setting:
         cc()
         game_credits()
     elif "m" in which_setting:
@@ -786,8 +779,8 @@ def main_menu():
     print("1: Rock Paper scissors")
     print("2: Bottle Flip")
     print("3: Hangman")
-    print("5: Dice")
-    print("8: Tic Tac Toe (You need a friend. Too bad you dont have any.)")
+    print("4: Dice")
+    print("5: Tic Tac Toe (You need a friend. Too bad you dont have any.)")
     print()
     print("s: Settings")
     print("q: Quit Game")
@@ -803,10 +796,10 @@ def main_menu():
     elif "3" in which_game:
         cc()
         hangman()
-    elif "5" in which_game:
+    elif "4" in which_game:
         cc()
         dice()
-    elif "8" in which_game:
+    elif "5" in which_game:
         cc()
         ttt()
     elif "s" in which_game: 
@@ -819,5 +812,4 @@ def main_menu():
         print("Invalid input")
         main_menu()
 main_menu()
-
 
