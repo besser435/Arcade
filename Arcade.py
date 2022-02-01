@@ -34,9 +34,11 @@ def main_notes():   # to collapse the text below in the IDE
     # SPAGHETTI CODE STATUS: ITALIAN
     # HOURS WASTED ON DEBUGGING AND USELESS FEATURES SO FAR: 614
 
-version = "v1.5.3"
+version = "v1.6"
 
-import traceback    # prevents the terminal from closing if
+import traceback
+
+from pip import main    # prevents the terminal from closing if
 try:                # there is an error so you can read it
 
     import webbrowser, keyboard, random, pygame, time, sys, PIL, os   # pip install gtts
@@ -61,11 +63,10 @@ try:                # there is an error so you can read it
     enable_music = 1
     rickroll = 1
     global_cut_music = 0            # see message below
-    game_count = 8                  # used for e_egg
+    game_count = 9                  # used for e_egg
     enable_debug_flags_main = 0     # its sad that this is even a thing
     linux_mode = 0                  # only tested on Ubuntu, it works there
     music_vol = 0.7
-
     """
     Enable this option if you don't have the music files, or are getting
     errors related to it. This option basically disables anything 
@@ -1080,6 +1081,74 @@ try:                # there is an error so you can read it
             main_menu()
 
 
+    total_points = 0    # impliment this bit properly like the RPS game
+    def fishing():
+        try:
+            global e_egg
+            e_egg =+ 1
+ 
+            # storage
+            #total_points = 0
+            rand_wait_time = random.randint(1, 4) 
+
+            fishes = (
+                ("Minnow", 20, 10),
+                ("Bluegill", 30, 30),
+                ("Bass", 15, 100),
+                ("Trout", 10, 200),
+                ("Salmon", 4, 500),
+                ("Gold Boot", 1, 5000) )
+
+
+            def game():
+                cast_query = input("Press enter to cast your rod ")
+                if "menu" in cast_query:
+                    ingame_menu(fishing)
+
+
+                print("Casting your rod...")
+                time.sleep(rand_wait_time)
+                reel_in_bite = input("You have a bite! Press enter to reel it in ")  # make so if you dont reel it fast enough you loose it
+                cc()
+
+
+                def cast_result():
+                    global percent
+                    catch = random.randrange(0, 100)
+                    for (fish, percent, score) in fishes:
+                        catch -= percent
+                        if catch < 0:
+                            return (fish, score)
+
+
+                def cast():
+                    global total_points
+                    #nonlocal total_points 
+
+                    (fish, score) = cast_result()   # BUG This line sometimes throws an error. Im not sure why, but this bit is re-used and really old code
+
+                    print("You have caught a ", end="")
+                    print(fish + "!")
+                    print()
+                    print("It is worth " + str(score) + " points")
+                    total_points += score
+                    print("You now have " + str(total_points) + " total points")
+
+                    if enable_debug_flags_main == True: print(Fore.YELLOW + "Chance = " + str(percent))
+
+                cast()
+
+                ingame_menu(fishing)
+        except Exception:
+            print(traceback.format_exc())
+            print(Fore.RED + "Fishing Game Error")
+            input("Press enter to return to the main menu ")
+            cc()
+            main_menu()
+
+        game()
+
+
 
 
     def game_credits():
@@ -1439,7 +1508,7 @@ try:                # there is an error so you can read it
         
     def main_menu():    # also contains easter egg code
         print("Arcade for IFT101 by Carter, R-Bay, and Brandon")
-        print("December 2021")
+        print("January 2022")
         print(version)
         global rickroll
         global enable_music
@@ -1468,6 +1537,7 @@ try:                # there is an error so you can read it
         print("6: Free images")
         print("7: Inator Inator!")   # doof
         print("8: Tic Tac Toe (You need a friend. Too bad you dont have any.)")
+        print("9: Fishing")
         print()
         print("s: Settings")
         print("n: Notes about this program")
@@ -1500,6 +1570,12 @@ try:                # there is an error so you can read it
         elif "8" in which_game:
             cc()
             ttt()
+        elif "9" in which_game:
+            cc()
+            input("Warning, this game may cause errors and crash it. Press enter to continue ")
+            cc()
+            
+            fishing()
         elif "d" in which_game:
                 enable_music = 0
                 if global_cut_music == False:
@@ -1541,7 +1617,13 @@ try:                # there is an error so you can read it
             webbrowser.open("https://docs.google.com/document/d/1z0a9XA7nS2HSgqRiNl7OAoM2NchoCG0EkOCNeLv4DfM/edit?usp=sharing", autoraise=False)
             main_menu()
         elif "a" in which_game:  # shortcut to current work
-            gui_music()     
+            cc()
+            enable_music = 0
+            rickroll = 0
+            pygame.mixer.music.fadeout(750)
+            
+            fishing()   
+            main_menu()  
         else:
             cc()
             print(Fore.RED + "Invalid input")
