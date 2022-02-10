@@ -8,25 +8,64 @@ def main_notes():
 
     """
 
-version = "v0.1"
+version = "v0.2"
+
+import board
+import random
+import time
+import sys
+import keypad
+import neopixel
 
 
-import random, time, os
+# setup
+km = keypad.KeyMatrix(
+    row_pins=(board.D12, board.D5, board.D6, board.D10),
+    column_pins=(board.D11, board.D13, board.D9)
+)
 
-#from statistics import mean
-
+led_neo = neopixel.NeoPixel(board.NEOPIXEL, 1)     
+led_neo.brightness = 0.01
+led_neo[0] = (50, 255, 0)
 
 # options
-game_count = 8                  # used for e_egg
 enable_debug_flags_main = 0     # its sad that this is even a thing
 
 
-def cc():   # shortened this long command to cc()
-    os.system("cls" if os.name == "nt" else "clear")
-cc()
+def cc():
+    for i in range(30): # commands like cls or clear dont work on circuitpython, so this is the workaround
+        print()
 
 
-def ingame_menu(replay_game):
+
+"""
+elif event.key_number == 9 and event.pressed:
+    return "*"           
+elif event.key_number == 10 and event.pressed:
+    return 0  
+elif event.key_number == 11 and event.pressed:
+    return "#"  
+"""
+
+"""
+input code copy and paste
+
+while True:
+    event = km.events.get()
+    if event:
+        if event.key_number == 0 and event.pressed: 
+            cc()
+            rps()  
+
+
+while True:
+    event = km.events.get()
+    if event:
+        if event.key_number == 11 and event.pressed: 
+            ingame_menu(rps)
+"""    
+
+def ingame_menu(replay_game):       # make it so any time * is pressed it brings up this menu
     print()
     print("Would you like to:")
     print("1: Play Again")
@@ -42,8 +81,6 @@ def ingame_menu(replay_game):
     elif "menu" in ask_menu:
         cc()
         main_menu()
-    elif "q" in ask_menu:
-        goodbye()
 
 
 def rps():
@@ -77,6 +114,7 @@ def rps():
     player_score = 0
     comp_score = 0
     enable_rig = 0
+    #ask_for_rig = 0
     enable_super_rig = 0          
     player_history = []     
     comp_history = []
@@ -121,33 +159,63 @@ def rps():
 
 
     class match_fixing:
+        global km
+        global ask_for_rig
         # added this feature just to practice. in reality its useless and a waste of time
         # enable_rig = computer leans towards rock
         # enable_super_rig = computer always wins
-    
+
+
+
+
+
         if skip_rig_ask == True:
             if enable_debug_flags_main == 1: print("                          skip_rig_ask = " + str(skip_rig_ask))
         else:
             nonlocal enable_rig   # took me 20 minutes to figure out where this needed to go haha
             nonlocal enable_super_rig
             
-            ask_for_rig = input("Would you like to rig the game? y/n ")
+        
 
-            if ask_for_rig == "y":
-                ask_for_super_rig = input("Would you like to super rig the game? y/n ")
-                if ask_for_super_rig == "menu":
+        print("Would you like to rig the game? 0/1=(n/y)")
+        while True:
+            event = km.events.get()
+            if event:
+                if event.key_number == 0 and event.pressed: 
+                    ask_for_rig = True
+                    break
+
+                elif event.key_number == 11 and event.pressed:
+                    cc()
                     ingame_menu(rps)
+                    break
 
-                if "y" in ask_for_super_rig:
-                    enable_super_rig = True
-                    print("Game is rigged: rig = " + str(enable_rig) + " super rig = " + str(enable_super_rig))
-                    Operation_Asteroid2()
-                else: 
-                    enable_rig = True
-                    print("Game is rigged: rig = " + str(enable_rig) + " super rig = " + str(enable_super_rig))
-                    Operation_Asteroid2()
-            elif "menu" in ask_for_rig:
-                ingame_menu(rps)
+        if ask_for_rig == 1: # no this cant just be put in the if statement above (maybe it can idk im lazy)
+            ask_for_super_rig = 0
+            print("Would you like to super rig the game? 0/1=(n/y)")
+
+            while True:
+                event = km.events.get()
+                if event:
+                    if event.key_number == 0 and event.pressed: 
+                        ask_for_super_rig = True
+                        break
+
+
+            if ask_for_super_rig == 1:
+                enable_super_rig = True
+                print("Game is rigged: rig = " + str(enable_rig) + " super rig = " + str(enable_super_rig))
+                Operation_Asteroid2()
+            else: 
+                enable_rig = True
+                print("Game is rigged: rig = " + str(enable_rig) + " super rig = " + str(enable_super_rig))
+                Operation_Asteroid2()
+            
+
+               
+
+
+
 
 
     def game():
@@ -311,8 +379,6 @@ def rps():
                     print()
                     print("You win :(")
                     print("GG!")
-                    global e_egg
-                    e_egg += 1
                     game_reset()
                     ingame_menu(rps)
 
@@ -369,8 +435,6 @@ def bottle_flip():
                     print("||")
                     print("The bottle landed")
                     print("You win")
-                    global e_egg
-                    e_egg += 1
                     ingame_menu(bottle_flip)
                 else:
                     time.sleep(suspense_delay)
@@ -407,81 +471,8 @@ def bottle_flip():
     game()
 
 
-def hangman():
-    print("Hangman by Brandon, Carter, and R-Bay")
-    print("There are also phrases, not just words!")
-    print()
-    words = ["apple", "computer", "nature", "forest", "music", "china",
-    "eat the rich", "sadness", "happy", "puppies", "cookie", "python", "keyboard",
-    "holiday", "chicken", "display", "jeff bezos", "tax fraud", "engine", "science"
-    "piano", "software", "technology", "color", "ignorant", "american"] 
-    # "Those last two words have zero correlation" -An American, 2021
-
-    chosen_word = random.choice(words)          # random word list
-
-    guesses = []
-    wrong_guesses = []
-    guesses_left = 6    # if this hits 0 the game ends and you loose
-
-    def win():
-            print("Nice, +100 social credit score")
-            print("You win! The word was " + chosen_word)
-            ingame_menu(hangman)
-
-    while guesses_left > 0:
-        output = ""
-        if enable_debug_flags_main == 1: print("chosen word is: " + chosen_word)
-
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        for letter in chosen_word:
-            if letter in guesses:
-                output = output + letter
-            else:
-                output = output + "_"
-
-        if output == chosen_word:
-            break
-
-        print("Word: ", output)
-        print(guesses_left, "guesses left")
-        guess = input("Enter lowercase letter, complete word, or phrase: ")
-        if "menu" in guess:
-            ingame_menu(hangman)
-
-        if guess == chosen_word:
-            global e_egg
-            e_egg += 1
-            win()
-
-        else:
-            if guess in guesses or guess in wrong_guesses:
-                cc()
-                print("Already entered, try again")
-            elif guess in chosen_word:
-                cc()
-                print("Correct guess")
-                guesses.append(guess)
-            else:
-                cc()
-                print("Incorrect guess")
-                guesses_left = guesses_left - 1     # revolutionary tech
-                wrong_guesses.append(guess)
-            print()
-
-
-    if guesses_left:
-        win()
-        e_egg += 1
-        ingame_menu(hangman)
-    else:
-        print("You lost :(  the word was " + chosen_word)
-        ingame_menu(hangman)
-
-
 def dice():
     # ASCII art for dice found on the Google machine
-    global e_egg
-    e_egg += 1
 
     while True:
         print()
@@ -571,10 +562,6 @@ def ttt():
         add version of the board that changes it so
         it line up with a numpad
         """
-
-
-        global e_egg
-        e_egg += 1
 
 
         board_places = {"1": " " , "2": " " , "3": " " ,
@@ -701,7 +688,7 @@ def game_credits():
     print()
     print("Carter", "smpoison")
     time.sleep(0.5)
-    print("| (• ◡•)| (❍ᴥ❍ʋ)")
+    print("| (• ◡•)| (❍ᴥ❍)")
     time.sleep(1.2)
 
     print()
@@ -751,24 +738,17 @@ def settings_menu():
     elif "m" in which_setting:
         cc()
         main_menu()
-    elif "q" in which_setting:
-        goodbye()
     else:
         cc()
         print()
         print("Invalid input")
         settings_menu()
 
-
-def goodbye():
-    print("Goodbye")
-    time.sleep(1)
-    sys.exit()
-
     
 def main_menu():    
-    print("Arcade for  Brandon")
-    print("December 2021")
+    
+    print("Arcade")
+    print("Febuary 2022")
     print(version)
 
 
@@ -778,38 +758,44 @@ def main_menu():
     print("Game options are:")
     print("1: Rock Paper scissors")
     print("2: Bottle Flip")
-    print("3: Hangman")
-    print("4: Dice")
-    print("5: Tic Tac Toe (You need a friend. Too bad you dont have any.)")
+    print("3: Dice")
+    print("4: Tic Tac Toe (You need a friend. Too bad you dont have any.)")
+    print("5: Fishing game (not implimented)")
+    print("#: Settings Menu")
     print()
-    print("s: Settings")
-    print("q: Quit Game")
+    print("What would you like to do? ")
 
-    which_game = input("What would you like to do? ")
+    while True:
+        event = km.events.get()
+        if event:
+            if event.key_number == 0 and event.pressed: 
+                cc()
+                rps()
 
-    if "1" in which_game:
-        cc()
-        rps()
-    elif "2" in which_game:
-        cc()
-        bottle_flip()
-    elif "3" in which_game:
-        cc()
-        hangman()
-    elif "4" in which_game:
-        cc()
-        dice()
-    elif "5" in which_game:
-        cc()
-        ttt()
-    elif "s" in which_game: 
-        cc()
-        settings_menu()
-    elif "q" in which_game:
-        goodbye()  
-    else:
-        cc()
-        print("Invalid input")
-        main_menu()
+            elif event.key_number == 1 and event.pressed: 
+                cc()
+                bottle_flip()
+
+            elif event.key_number == 2 and event.pressed:  
+                cc()
+                dice()
+
+            elif event.key_number == 3 and event.pressed: 
+                cc()
+                ttt()
+
+            elif event.key_number == 4 and event.pressed: 
+                cc()
+                main_menu()
+
+            elif event.key_number == 11 and event.pressed:  
+                cc()
+                settings_menu()
+            else:
+                cc()
+                print("Not a valid selection")
+                main_menu()
+
+
 main_menu()
 
