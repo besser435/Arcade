@@ -34,7 +34,7 @@ def main_notes():   # to collapse the text below in the IDE
     # SPAGHETTI CODE STATUS: ITALIAN
     # HOURS WASTED ON DEBUGGING AND USELESS FEATURES SO FAR: 614
 
-version = "v1.6"
+version = "v1.6.1"
 
 import traceback
 
@@ -780,7 +780,7 @@ try:                # there is an error so you can read it
 
                 total = 0
                 for i in range(int(amount)):
-                    roll = random.randint(3,6)
+                    roll = random.randint(1,6)
                     print()
                     if roll == 1:
                         print("|-----|")
