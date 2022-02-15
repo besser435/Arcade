@@ -32,15 +32,14 @@ def main_notes():   # to collapse the text below in the IDE
 
     """
     # SPAGHETTI CODE STATUS: ITALIAN
-    # HOURS WASTED ON DEBUGGING AND USELESS FEATURES SO FAR: 614
+    # HOURS WASTED ON DEBUGGING AND USELESS FEATURES SO FAR: 714
 
-version = "v1.6.1"
+version = "v1.6.2"
+
 
 import traceback
-
-from pip import main    # prevents the terminal from closing if
-try:                # there is an error so you can read it
-
+  # prevents the terminal from closing if there is an error so you can read it
+try:                
     import webbrowser, keyboard, random, pygame, time, sys, PIL, os   # pip install gtts
     from colorama import init                   # pip install colorama
     init()
