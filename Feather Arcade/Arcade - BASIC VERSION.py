@@ -8,7 +8,7 @@ def main_notes():
 
     """
 
-version = "v0.2"
+version = "v0.3"
 
 import board
 import random
@@ -16,17 +16,32 @@ import time
 import sys
 import keypad
 import neopixel
+from analogio import AnalogIn
 
 
 # setup
 km = keypad.KeyMatrix(
     row_pins=(board.D12, board.D5, board.D6, board.D10),
-    column_pins=(board.D11, board.D13, board.D9)
+    column_pins=(board.D11, board.D13, board.D9),
+    max_events=1 # limits the queue to 1 input
 )
 
 led_neo = neopixel.NeoPixel(board.NEOPIXEL, 1)     
-led_neo.brightness = 0.01
-led_neo[0] = (50, 255, 0)
+led_neo.brightness = 0.03
+
+
+# Batt voltage
+vbat_voltage = AnalogIn(board.VOLTAGE_MONITOR)
+def get_voltage(pin):
+    return (pin.value * 3.3) / 65536 * 2
+battery_voltage = get_voltage(vbat_voltage)
+
+
+r = random.randint(0,255) # just for fun
+g = random.randint(0,255)
+b = random.randint(0,255)
+led_neo[0] = (r, g, b)  
+
 
 # options
 enable_debug_flags_main = 0     # its sad that this is even a thing
@@ -70,17 +85,15 @@ def ingame_menu(replay_game):       # make it so any time * is pressed it brings
     print("Would you like to:")
     print("1: Play Again")
     print("2: Return to Menu")
-    print("3: Quit the Program")
-    ask_menu = input()
-    if "1" in ask_menu:
-        cc()
-        replay_game()
-    elif "2" in ask_menu:
-        cc()
-        main_menu()
-    elif "menu" in ask_menu:
-        cc()
-        main_menu()
+    while True:
+        event = km.events.get()
+        if event:
+            if event.key_number == 0 and event.pressed: 
+                cc()
+                replay_game()  
+            elif event.key_number == 1 and event.pressed: 
+                cc()
+                main_menu()
 
 
 def rps():
@@ -97,7 +110,7 @@ def rps():
     version = "v1.7.1"
     
     cc()
-    # the plays but with colors
+    # the plays (this used to be for color but that code got removed and some stuff still relies on this)
     rolla = "rock"
     rollb = "paper"
     rollc = "scissors"
@@ -106,7 +119,6 @@ def rps():
     # options
     skip_rig_ask = 0        # disables rigging if this is enabled
     enable_asteroid = 1
-    cls_after_turn = 0      # clears the terminal after each turn
     match_point = 3
 
 
@@ -126,9 +138,7 @@ def rps():
 
     # Operation Asteroid 2 is just a stupid easter egg. serves no purpose except to fuel my "creativity"
     def Operation_Asteroid2():
-        if enable_debug_flags_main == True:
-            pass    # skips this painful process if need be
-        else:
+        if enable_debug_flags_main == False:
             random_asteroid = random.randint(0,12)                   # low-ish chance of world domination (if the player rigs the game)
             if enable_asteroid == True and random_asteroid == 0:
                 print("Game is rigged: " + str(enable_rig))         # I was diagnosed with autism and this has
@@ -160,14 +170,10 @@ def rps():
 
     class match_fixing:
         global km
-        global ask_for_rig
+        #global ask_for_rig
         # added this feature just to practice. in reality its useless and a waste of time
         # enable_rig = computer leans towards rock
         # enable_super_rig = computer always wins
-
-
-
-
 
         if skip_rig_ask == True:
             if enable_debug_flags_main == 1: print("                          skip_rig_ask = " + str(skip_rig_ask))
@@ -175,7 +181,6 @@ def rps():
             nonlocal enable_rig   # took me 20 minutes to figure out where this needed to go haha
             nonlocal enable_super_rig
             
-        
 
         print("Would you like to rig the game? 0/1=(n/y)")
         while True:
@@ -183,6 +188,12 @@ def rps():
             if event:
                 if event.key_number == 0 and event.pressed: 
                     ask_for_rig = True
+                    print(1)
+                    break
+
+                elif event.key_number == 10 and event.pressed: 
+                    ask_for_rig = False
+                    print(0)
                     break
 
                 elif event.key_number == 11 and event.pressed:
@@ -190,15 +201,20 @@ def rps():
                     ingame_menu(rps)
                     break
 
-        if ask_for_rig == 1: # no this cant just be put in the if statement above (maybe it can idk im lazy)
-            ask_for_super_rig = 0
-            print("Would you like to super rig the game? 0/1=(n/y)")
 
+        if ask_for_rig == 1: # no this cant just be put in the if statement above (maybe it can idk im lazy)
+            print("Would you like to super rig the game? 0/1=(n/y)")
             while True:
                 event = km.events.get()
                 if event:
                     if event.key_number == 0 and event.pressed: 
                         ask_for_super_rig = True
+                        print(1)
+                        break
+
+                    if event.key_number == 10 and event.pressed: 
+                        ask_for_super_rig = False
+                        print(0)
                         break
 
 
@@ -212,12 +228,6 @@ def rps():
                 Operation_Asteroid2()
             
 
-               
-
-
-
-
-
     def game():
         while True:
             print()
@@ -230,13 +240,25 @@ def rps():
 
             class player_entry:
                 # User inputs their play here
-                print("Enter " + rolla + ", " + rollb + ", or " + rollc)
+                print("Enter 1 for " + rolla + ", 2 for " + rollb + ", or 3 for " + rollc)
 
-                global player_input
-                player_input = input()
-                print()
-                if "menu" in player_input:
-                    ingame_menu(rps)
+
+            while True:  
+                event = km.events.get()
+                if event:
+                    if event.key_number == 0 and event.pressed: 
+                        player_input = "rock"
+                        break
+                    elif event.key_number == 1 and event.pressed: 
+                        player_input = "paper"
+                        break
+                    elif event.key_number == 2 and event.pressed: 
+                        player_input = "scissors"
+                        break
+                    elif event.key_number == 11 and event.pressed: 
+                        ingame_menu(rps)
+                        break
+
 
             class rng:
                 global comp_choice
@@ -281,13 +303,13 @@ def rps():
                 if enable_debug_flags_main == False: # skips this while debugging crap
                     print()
                     print(rolla)
-                    time.sleep(0.3)
+                    time.sleep(0.35)
                     print(rollb)
-                    time.sleep(0.3)
+                    time.sleep(0.35)
                     print(rollc)
-                    time.sleep(0.3)
+                    time.sleep(0.35)
                     print("shoot!")
-                    time.sleep(0.5)
+                    time.sleep(0.6)
                     print()
 
 
@@ -389,13 +411,6 @@ def rps():
                     game_reset()
                     ingame_menu(rps)
 
-
-            if cls_after_turn == True:
-                print()
-                input("Press enter to continue ")  # BUG hitting this on the last round closes the game. conflict with the menu
-                cc()
-            if cls_after_turn == "menu": 
-                ingame_menu(rps)
     game()
 
 
@@ -404,70 +419,46 @@ def bottle_flip():
     print()
 
     def game():
+        delay = 0.4
+        flip_count = 3
+        suspense_delay = 1
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print("Press 1 to flip the bottle: ")
         while True:
-            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-
-            flip_reg = input("Press e to flip the bottle: ")
-            delay = 0.4
-            flip_count = 3
-            suspense_delay = 1
-
-            # The game
-            if "menu" in flip_reg:
-                ingame_menu(bottle_flip)
-            elif "e" in flip_reg:
-                for i in range(flip_count):
-                    print("||")
-                    time.sleep(delay)
-                    print("==")
-                    time.sleep(delay)
-                flip_reg_outcome = (random.randint(0,4)) # chance to land the flip
+            event = km.events.get()
+            if event:
+                if event.key_number == 0 and event.pressed: 
+                    for i in range(flip_count):
+                        print("||")
+                        time.sleep(delay)
+                        print("==")
+                        time.sleep(delay)
+                    flip_reg_outcome = (random.randint(0,4)) # chance to land the flip
 
 
-                for i in range(3):   # builds suspense
-                    time.sleep(delay)
-                    sys.stdout.write(".")
+                    for i in range(3):   # builds suspense
+                        time.sleep(delay)
+                        sys.stdout.write(".")
 
 
-                if flip_reg_outcome == 0:
-                    time.sleep(suspense_delay)
-                    print()
-                    print("||")
-                    print("The bottle landed")
-                    print("You win")
+                    if flip_reg_outcome == 0:
+                        time.sleep(suspense_delay)
+                        print()
+                        print("||")
+                        print("The bottle landed")
+                        print("You win")
+                        ingame_menu(bottle_flip)
+
+                    else:
+                        time.sleep(suspense_delay)
+                        print()
+                        print("==")
+                        print("The bottle fell over")
+                        print("You loose")
+                        ingame_menu(bottle_flip) 
+                elif event.key_number == 11 and event.pressed:
                     ingame_menu(bottle_flip)
-                else:
-                    time.sleep(suspense_delay)
-                    print()
-                    print("==")
-                    print("The bottle fell over")
-                    print("You loose")
-                    ingame_menu(bottle_flip)
-
-            # cheat code games
-            elif "https://imgur.com/a/yIdxUBW" in flip_reg:
-                for i in range(flip_count):
-                    print("|| cheater")
-                    time.sleep(delay)       # Both versions could just access this as a function for a better
-                    print("== cheater")     # implementation, but this works and I only thought of this when it was done
-                    time.sleep(delay)
-
-                for i in range(3):
-                    print(".", end =" ")
-                    time.sleep(delay)
-
-                time.sleep(suspense_delay)
-                print("||")
-                print("you win... I guess")     # did you really though?
-                ingame_menu(bottle_flip)
-
-            elif "menu" in flip_reg:
-                ingame_menu(bottle_flip)
-
-            else:
-                cc()
-                print("Invalid input")
-                game()
+  
     game()
 
 
@@ -475,81 +466,129 @@ def dice():
     # ASCII art for dice found on the Google machine
 
     while True:
+        amount = []    
+        total = 0
+        print("Enter a number, then hit * to continue")
+        while True:
+            event = km.events.get()
+            # autism lmao
+            if event:
+                if event.key_number == 0 and event.pressed: 
+                    amount.append(1)
+                    sys.stdout.write("1")
+
+                elif event.key_number == 1 and event.pressed: 
+                    amount.append(2)
+                    sys.stdout.write("2")
+
+                elif event.key_number == 2 and event.pressed:  
+                    amount.append(3)
+                    sys.stdout.write("3")
+
+                elif event.key_number == 3 and event.pressed:  
+                    amount.append(4)
+                    sys.stdout.write("4")           
+
+                elif event.key_number == 4 and event.pressed:  
+                    amount.append(5)
+                    sys.stdout.write("5")  
+
+                elif event.key_number == 5 and event.pressed:  
+                    amount.append(6)
+                    sys.stdout.write("6")  
+
+                elif event.key_number == 6 and event.pressed:  
+                    amount.append(7)
+                    sys.stdout.write("7")             
+
+                elif event.key_number == 7 and event.pressed:  
+                    amount.append(8)
+                    sys.stdout.write("8")  
+
+                elif event.key_number == 8 and event.pressed:  
+                    amount.append(9)
+                    sys.stdout.write("9")  
+
+                elif event.key_number == 10 and event.pressed:  
+                    amount.append(0)
+                    sys.stdout.write("0")  
+
+                elif event.key_number == 9 and event.pressed:  
+                    break
+
+                elif event.key_number == 11 and event.pressed:  
+                    ingame_menu("dice")
+
+
+        def convert(list):
+            add = int("".join(map(str, list)))
+            return add
+        final_count = convert(amount)
+
         print()
-        amount = input("How many dice would you like to roll? ")
-        if "menu" in amount:
-            ingame_menu(dice)
+        print("rolling the dice...")
+        time.sleep(1)
 
-        if amount.isdigit():    # checks that the input is an integer
-            print("rolling the dice...")
-            time.sleep(0.5)
-
-            total = 0
-            for i in range(int(amount)):
-                roll = random.randint(3,6)
-                print()
-                if roll == 1:
-                    print("|-----|")
-                    print("|     |")
-                    print("|  O  |")
-                    print("|     |")
-                    print("|-----|")
-                    print("You rolled a 1")
-                    total += 1
-
-                elif roll == 2:
-                    print("|-----|")
-                    print("| O   |")
-                    print("|     |")
-                    print("|   O |")
-                    print("|-----|")
-                    print("You rolled a 2")
-                    total += 2
-
-                elif roll == 3:
-                    print("|-----|")
-                    print("|     |")
-                    print("|O O O|")
-                    print("|     |")
-                    print("|-----|")
-                    print("You rolled a 3")
-                    total += 3
-
-                elif roll == 4:
-                    print("|-----|")
-                    print("|O   O|")
-                    print("|     |")
-                    print("|O   O|")
-                    print("|-----|")
-                    print("You rolled a 4")
-                    total += 4
-
-                elif roll == 5:
-                    print("|-----|")
-                    print("|O   O|")
-                    print("|  O  |")
-                    print("|O   O|")
-                    print("|-----|")
-                    print("You rolled a 5")
-                    total += 5
-
-                elif roll == 6:
-                    print("|-----|")
-                    print("|O O O|")
-                    print("|     |")
-                    print("|O O O|")
-                    print("|-----|")
-                    print("You rolled a 6")
-                    total += 6
-
+        for i in range(final_count):
+            roll = random.randint(1,6)
             print()
-            print("The dice add up to " + str(total))
-            print()
-            ingame_menu(dice)
+            if roll == 1:
+                print("|-----|")
+                print("|     |")
+                print("|  O  |")
+                print("|     |")
+                print("|-----|")
+                print("You rolled a 1")
+                total += 1
 
-        else:
-            print("you did a sussy baka D: (Didn't enter an integer)")  # if you need to sue/disappear someone for this,
-            ingame_menu(dice)                                           # sue Brandon. I added it, not my group partners.
+            elif roll == 2:
+                print("|-----|")
+                print("| O   |")
+                print("|     |")
+                print("|   O |")
+                print("|-----|")
+                print("You rolled a 2")
+                total += 2
+
+            elif roll == 3:
+                print("|-----|")
+                print("|     |")
+                print("|O O O|")
+                print("|     |")
+                print("|-----|")
+                print("You rolled a 3")
+                total += 3
+
+            elif roll == 4:
+                print("|-----|")
+                print("|O   O|")
+                print("|     |")
+                print("|O   O|")
+                print("|-----|")
+                print("You rolled a 4")
+                total += 4
+
+            elif roll == 5:
+                print("|-----|")
+                print("|O   O|")
+                print("|  O  |")
+                print("|O   O|")
+                print("|-----|")
+                print("You rolled a 5")
+                total += 5
+
+            elif roll == 6:
+                print("|-----|")
+                print("|O O O|")
+                print("|     |")
+                print("|O O O|")
+                print("|-----|")
+                print("You rolled a 6")
+                total += 6
+
+        print()
+        print("The dice add up to " + str(total))
+        ingame_menu(dice)
 
 
 def ttt():
@@ -714,6 +753,7 @@ def settings_menu():
     print("Settings options are:")
     print("1: View Credits")
     print("2: Debugging Mode")
+    print("3: RGB Goodness (not implimented)")
     print()
     print("m: Go back to main menu")
     print("q: Quit Game")
@@ -746,13 +786,13 @@ def settings_menu():
 
     
 def main_menu():    
-    
-    print("Arcade")
-    print("Febuary 2022")
+    cc()
+    print("Arcade by Brandon")
+    print("February 2022")
+    print("Voltage: {:.2f}".format(battery_voltage))
     print(version)
-
-
-    print('Type "menu" during a game to show the menu')
+    #print(r, g, b)
+    print("Enter # during a game to show the menu")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print()
     print("Game options are:")
@@ -761,7 +801,8 @@ def main_menu():
     print("3: Dice")
     print("4: Tic Tac Toe (You need a friend. Too bad you dont have any.)")
     print("5: Fishing game (not implimented)")
-    print("#: Settings Menu")
+    print()
+    print("*: Settings Menu")
     print()
     print("What would you like to do? ")
 
@@ -788,9 +829,10 @@ def main_menu():
                 cc()
                 main_menu()
 
-            elif event.key_number == 11 and event.pressed:  
+            elif event.key_number == 9 and event.pressed:  
                 cc()
                 settings_menu()
+
             else:
                 cc()
                 print("Not a valid selection")
